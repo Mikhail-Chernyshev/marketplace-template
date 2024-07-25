@@ -1,56 +1,87 @@
 <template>
-  <div
-    :style="{
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'row',
-    }"
-  >
+  <div class="layout" @click="handleClickOutside()">
+    <SideMenu :expanded="isSideMenuExpanded" />
     <div
-      :style="{
-        width: '250px',
-        display: 'flex',
-        flexDirection: 'column',
-      }"
+      class="layout__main-content"
+      :class="{ 'layout__main-content_expanded': isSideMenuExpanded }"
     >
-      <h1 :style="{ margin: 0 }">{{ appName }}</h1>
-      <SideMenu expanded="{delayExpanded}" />
-    </div>
-    <div
-      :style="{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }"
-    >
-      <header :style="{ height: '100px' }">
-        <h1 :style="{ margin: 0 }">{{ appName }}</h1>
-      </header>
-      <main :style="{ height: '100%' }">
+      <HeaderLayout
+        :isLocaleChoice="isLocaleChoice"
+        :showLocaleChoice="showLocaleChoice"
+        :toggleSideMenuExpansion="toggleSideMenuExpansion"
+      />
+      <main class="main">
         <router-view></router-view>
       </main>
-      <footer :style="{ height: '100px' }">© 2023 Мой сайт</footer>
+      <footer class="footer">Copyright © 2024 Marketplace</footer>
     </div>
   </div>
 </template>
 
 <script>
 import SideMenu from './SideMenu.vue';
+import HeaderLayout from './HeaderLayout.vue';
+import { ref } from 'vue';
+
 export default {
   name: ' MainLayout',
   components: {
     SideMenu,
+    HeaderLayout,
   },
-  data() {
+  setup() {
+    const isSideMenuExpanded = ref(true);
+    const isLocaleChoice = ref(false);
+
+    function toggleSideMenuExpansion() {
+      isSideMenuExpanded.value = !isSideMenuExpanded.value;
+    }
+    function handleClickOutside() {
+      if (isLocaleChoice.value) {
+        isLocaleChoice.value = !isLocaleChoice.value;
+      }
+    }
+    function showLocaleChoice() {
+      isLocaleChoice.value = !isLocaleChoice.value;
+    }
+
     return {
-      appName: process.env.VUE_APP_APP_NAME,
+      isSideMenuExpanded,
+      toggleSideMenuExpansion,
+      isLocaleChoice,
+      handleClickOutside,
+      showLocaleChoice,
     };
   },
-  mounted() {
-    console.log(123, process.env);
-  },
+
+  mounted() {},
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.layout {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.layout__main-content {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 70px);
+}
+.layout__main-content_expanded {
+  width: calc(100% - 250px);
+}
+.main {
+  height: calc(100% - 140px);
+}
+.footer {
+  height: 70px;
+  padding: 0 16px;
+  background-color: rgba(243, 244, 246);
+  color: rgba(33, 37, 41, 0.75);
+  line-height: 70px;
+  font-weight: 500;
+}
+</style>
