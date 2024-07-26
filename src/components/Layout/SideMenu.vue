@@ -13,7 +13,7 @@
       </h1>
     </div>
     <ul class="sideMenu__nav">
-      <MenuItem to="/admin" label="Dashboard" :expanded="expanded">
+      <MenuItem to="/" label="Dashboard" :expanded="expanded">
         <template #icon>
           <RiComputerLine
             class="sideMenu__navItemIcon"
@@ -25,7 +25,7 @@
       <div class="sideMenu__border-bottom"></div>
       <p class="sideMenu__subTitle" v-if="expanded">CONTENTS</p>
 
-      <MenuItem to="/admin/categories" label="Categories" :expanded="expanded">
+      <MenuItem to="/categories" label="Categories" :expanded="expanded">
         <template #icon>
           <RiBookmarkLine
             class="sideMenu__navItemIcon"
@@ -34,7 +34,7 @@
           />
         </template>
       </MenuItem>
-      <MenuItem to="/admin/cities" label="Cities" :expanded="expanded">
+      <MenuItem to="/cities" label="Cities" :expanded="expanded">
         <template #icon>
           <RiMap2Line
             class="sideMenu__navItemIcon"
@@ -43,7 +43,7 @@
           />
         </template>
       </MenuItem>
-      <MenuItem to="/admin/shops" label="Shops" :expanded="expanded">
+      <MenuItem to="/shops" label="Shops" :expanded="expanded">
         <template #icon>
           <RiStore2Line
             class="sideMenu__navItemIcon"
@@ -52,7 +52,7 @@
           />
         </template>
       </MenuItem>
-      <MenuItem to="/admin/products" label="Products" :expanded="expanded">
+      <MenuItem to="/products" label="Products" :expanded="expanded">
         <template #icon>
           <RiBox3Line
             class="sideMenu__navItemIcon"
@@ -64,7 +64,7 @@
 
       <div class="sideMenu__border-bottom"></div>
 
-      <MenuItem to="/admin/users" label="Users" :expanded="expanded">
+      <MenuItem to="/users" label="Users" :expanded="expanded">
         <template #icon>
           <RiGroupLine
             class="sideMenu__navItemIcon"
@@ -73,7 +73,7 @@
           />
         </template>
       </MenuItem>
-      <MenuItem to="/admin/settings" label="Settings" :expanded="expanded">
+      <MenuItem to="/settings" label="Settings" :expanded="expanded">
         <template #icon>
           <RiSettings3Line
             class="sideMenu__navItemIcon"
