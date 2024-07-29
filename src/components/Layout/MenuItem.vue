@@ -76,7 +76,7 @@ export default {
     justify-content: center;
     &_expanded {
       height: 40px;
-      border-radius: 8px;
+      border-radius: 4px;
       justify-content: unset;
     }
     &_active {

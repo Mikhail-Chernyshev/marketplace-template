@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import Settings from '../views/Settings.vue';
+import Categories from '@/views/Categories.vue';
 
 const routes = [
   {
@@ -9,17 +10,16 @@ const routes = [
     component: Home,
   },
   {
+    path: '/categories',
+    name: 'CategoriesPage',
+    component: Categories,
+  },
+  {
     path: '/settings',
     name: 'SettingsPage',
     component: Settings,
   },
 
-  //   {
-  //     path: '/admin',
-  //     name: 'Admin',
-  //     component: AdminDashboard,
-  //   },
-  // Добавьте другие маршруты по мере необходимости
 ];
 
 const router = createRouter({

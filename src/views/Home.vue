@@ -165,7 +165,7 @@ export default {
     const fetchDashboardData = async () => {
       try {
         const response = await fetch(
-          'http://192.168.0.177:8180/api/v1/admin/dashboard'
+          `${process.env.VUE_APP_BASE_URL}/admin/dashboard`
         );
         if (!response.ok) {
           throw new Error('Сетевая ошибка: ' + response.statusText);
@@ -239,7 +239,7 @@ export default {
 }
 .subscriptions {
   margin: 24px 0 0 0;
-  padding: 0 12px;
+  padding: 0 20px;
   &__title {
     margin: 0 0 16px 0;
     font-size: 24px;
@@ -252,15 +252,9 @@ export default {
       text-align: left;
       font-weight: 800;
       border-bottom: 1px solid #dee2e6;
-      &:first-child {
-        padding-left: 16px;
-      }
-      &:last-child {
-        padding-right: 16px;
-      }
     }
     &_body_item {
-      padding: 16px 8px 16px 16px;
+      padding: 16px 8px 16px 8px;
       text-align: left;
       border-bottom: 1px solid #dee2e6;
       &_link {
