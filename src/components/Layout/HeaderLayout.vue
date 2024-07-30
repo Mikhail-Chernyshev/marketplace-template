@@ -77,6 +77,9 @@ export default {
       cursor: pointer;
     }
   }
+  &__locale {
+    padding-right: 8px;
+  }
   &__localeToggle {
     font-weight: 500;
     &:hover {

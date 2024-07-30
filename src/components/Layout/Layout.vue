@@ -13,7 +13,7 @@
       <main class="main">
         <router-view></router-view>
       </main>
-      <footer class="footer">Copyright © 2024 Marketplace</footer>
+      <footer class="footer">Copyright © 2024 Petrosoft</footer>
     </div>
   </div>
 </template>
@@ -22,9 +22,10 @@
 import SideMenu from './SideMenu.vue';
 import HeaderLayout from './HeaderLayout.vue';
 import { ref } from 'vue';
+import { provide } from 'vue';
 
 export default {
-  name: ' MainLayout',
+  name: 'MainLayout',
   components: {
     SideMenu,
     HeaderLayout,
@@ -32,7 +33,10 @@ export default {
   setup() {
     const isSideMenuExpanded = ref(true);
     const isLocaleChoice = ref(false);
-
+    const isOpenActionUser = ref({
+      id: null,
+      open: false,
+    });
     function toggleSideMenuExpansion() {
       isSideMenuExpanded.value = !isSideMenuExpanded.value;
     }
@@ -40,21 +44,23 @@ export default {
       if (isLocaleChoice.value) {
         isLocaleChoice.value = !isLocaleChoice.value;
       }
+      if (isOpenActionUser.value.open) {
+        isOpenActionUser.value.open = !isOpenActionUser.value.open;
+      }
     }
     function showLocaleChoice() {
       isLocaleChoice.value = !isLocaleChoice.value;
     }
-
+    provide('isOpenActionUser', isOpenActionUser);
     return {
       isSideMenuExpanded,
       toggleSideMenuExpansion,
       isLocaleChoice,
       handleClickOutside,
       showLocaleChoice,
+      isOpenActionUser,
     };
   },
-
-  mounted() {},
 };
 </script>
 
