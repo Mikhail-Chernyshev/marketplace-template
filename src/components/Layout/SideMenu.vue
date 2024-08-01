@@ -171,6 +171,7 @@ export default {
 
   &__border-bottom {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 8px;
   }
 
   &__subTitle {

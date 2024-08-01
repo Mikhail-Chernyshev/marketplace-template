@@ -130,13 +130,6 @@ export default {
   }
 }
 .table {
-  width: 100%;
-  &_header_item {
-    padding: 12px 8px;
-    text-align: left;
-    font-weight: 800;
-    border-bottom: 1px solid #dee2e6;
-  }
   &_body_item {
     padding: 16px 8px;
     text-align: left;

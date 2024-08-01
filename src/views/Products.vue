@@ -16,17 +16,15 @@
           marginRight: '12px',
           fontWeight: '600',
         }"
-        class="form-check"
+        class="cities__header_checkboxs"
       >
         <input
           id="featuredCheck"
-          class="form-check-input"
+          class="cities__header_checkbox"
           type="checkbox"
           v-model="query.featured"
         />
-        <label for="featuredCheck" class="form-check-label fw-medium">
-          Featured
-        </label>
+        <label for="featuredCheck"> Featured </label>
       </div>
       <div
         :style="{ display: 'flex', alignItems: 'center', fontWeight: '600' }"
@@ -34,13 +32,11 @@
       >
         <input
           id="discountCheck"
-          class="form-check-input"
+          class="cities__header_checkbox"
           type="checkbox"
           v-model="query.discount"
         />
-        <label for="discountCheck" class="form-check-label fw-medium">
-          Discount
-        </label>
+        <label for="discountCheck"> Discount </label>
       </div>
     </div>
     <TableForDataPage
@@ -56,44 +52,44 @@
       emptyMessage="No products"
     >
       <template #row="{ item }">
-          <td class="table_body_item">
-            <img
-              class="table_body_item_image"
-              :src="'/images/placeholder.jpeg'"
-              alt="Product Image"
-            />
-          </td>
-          <td class="table_body_item">
-            <RouterLink
-              :style="{ color: 'black', fontWeight: '900' }"
-              :to="`/products/${item.slug}`"
-              class="text-dark"
-            >
-              {{ item.name }}
-            </RouterLink>
-          </td>
-          <td class="table_body_item">
-            <span class="table_body_item_status">{{ item.price }}</span>
-          </td>
-          <td class="table_body_item">
-            <span>{{ item?.category?.name ? item?.category?.name : '-' }}</span>
-          </td>
-          <td class="table_body_item">
-            <span :style="{ color: '#D50002', fontWeight: '500' }">
-              {{
-                item?.discount?.value ? '-' + item?.discount?.value + ' %' : '-'
-              }}
-            </span>
-          </td>
-          <td class="table_body_item">
-            <input
-              class="table_body_item_switch"
-              type="checkbox"
-              role="switch"
-              :checked="item.featured"
-              @change="handleChangeFeatured(item.id, item.featured)"
-            />
-          </td>
+        <td class="table_body_item">
+          <img
+            class="table_body_item_image"
+            :src="'/images/placeholder.jpeg'"
+            alt="Product Image"
+          />
+        </td>
+        <td class="table_body_item">
+          <RouterLink
+            :style="{ color: 'black', fontWeight: '900' }"
+            :to="`/products/${item.slug}`"
+            class="text-dark"
+          >
+            {{ item.name }}
+          </RouterLink>
+        </td>
+        <td class="table_body_item">
+          <span>{{ item.price }}</span>
+        </td>
+        <td class="table_body_item">
+          <span>{{ item?.category?.name ? item?.category?.name : '-' }}</span>
+        </td>
+        <td class="table_body_item">
+          <span :style="{ color: '#D50002', fontWeight: '500' }">
+            {{
+              item?.discount?.value ? '-' + item?.discount?.value + ' %' : '-'
+            }}
+          </span>
+        </td>
+        <td class="table_body_item">
+          <input
+            class="table_body_item_switch"
+            type="checkbox"
+            role="switch"
+            :checked="item.featured"
+            @change="handleChangeFeatured(item.id, item.featured)"
+          />
+        </td>
       </template>
     </TableForDataPage>
   </div>
@@ -222,44 +218,16 @@ export default {
         outline: none;
       }
     }
-    &_select {
-      font-size: 16px;
-      padding: 6px 16px 6px 12px;
-      width: 127px;
-      height: 50px;
-      background-color: #f9fafb;
-      border: 1px solid #e5e7eb;
-      border-radius: 6px;
-      &:focus {
-        border-color: rgb(225, 91, 81);
-        outline: none;
-      }
+    &_checkbox {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.175);
+      border-radius: 4px;
     }
   }
 }
 .table {
-  width: 100%;
-  &_header_item {
-    padding: 8px;
-    text-align: left;
-    font-weight: 900;
-    border-bottom: 1px solid #dee2e6;
-    position: relative;
-
-    &_filter {
-      width: 20px;
-      height: 20px;
-      border: none;
-      background-color: #ffffff;
-      padding: 0;
-      margin: 0;
-      position: absolute;
-      left: 66px;
-      color: rgb(225, 91, 81);
-      cursor: pointer;
-    }
-  }
-
   &_body_item {
     padding: 8px;
     text-align: left;
@@ -274,72 +242,6 @@ export default {
       padding: 0;
       margin: 0;
     }
-    &_status {
-      font-size: 14px;
-      &_approved {
-        color: #00a524;
-      }
-      &_disabled {
-        color: #d50002;
-      }
-      &_pending {
-        color: #ff9017;
-      }
-    }
-    &_link {
-      color: black;
-      font-weight: 800;
-    }
-    &_buttons {
-      display: flex;
-      gap: 10px;
-    }
-    &_edit {
-      width: 45px !important;
-      background-color: #c9c9c9;
-      border-radius: 8px;
-      text-align: center;
-      height: 21px !important;
-      padding: 6px 0;
-      cursor: pointer;
-    }
-    &_edit > a {
-      color: black;
-    }
-    &_delete {
-      width: 45px !important;
-      background-color: #d50002;
-      color: white;
-      border-radius: 8px;
-      text-align: center;
-      height: 33px !important;
-      border: none;
-    }
   }
-}
-
-#featuredCheck {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.175);
-  border-radius: 4px;
-}
-
-#featuredCheck:hover {
-  accent-color: #e15b51 !important;
-}
-#featuredCheck:checked {
-  accent-color: #e15b51 !important;
-}
-#discountCheck {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.175);
-  border-radius: 4px;
-}
-#discountCheck:hover {
-  accent-color: #e15b51 !important;
 }
 </style>

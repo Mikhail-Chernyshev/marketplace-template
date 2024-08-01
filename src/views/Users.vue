@@ -22,24 +22,24 @@
     <TableForDataPage
       :items="fetchData.contents"
       :headers="[
-        { label: 'NAME', key: 'name' },
-        { label: 'EMAIL', key: 'email' },
-        { label: 'PHONE', key: 'phone' },
-        { label: 'ROLE', key: 'role' },
-        { label: 'CREATED AT', key: 'createdAt' },
-        { label: 'ACTION', key: 'action' },
+        { label: 'NAME', key: 'name', minWidth: 300 },
+        { label: 'EMAIL', key: 'email', minWidth: 200 },
+        { label: 'PHONE', key: 'phone', minWidth: 150 },
+        { label: 'ROLE', key: 'role', minWidth: 100 },
+        { label: 'CREATED AT', key: 'createdAt', minWidth: 200 },
+        { label: 'ACTION', key: 'action', minWidth: 150 },
       ]"
       emptyMessage="No users found"
     >
       <template #row="{ item }">
         <td class="table_body_item">
-          <span class="table_body_item_status">{{ item.name }}</span>
+          <span> {{ item.name }} </span>
         </td>
         <td class="table_body_item">
-          <span class="table_body_item_status">{{ item.email }}</span>
+          <span> {{ item.email }} </span>
         </td>
         <td class="table_body_item">
-          <span class="table_body_item_status">{{ item.phone }}</span>
+          <span> {{ item.phone }} </span>
         </td>
         <td class="table_body_item">
           <span>{{ item.role ? item.role : '-' }}</span>
@@ -213,55 +213,7 @@ export default {
     }
   }
 }
-.nothing {
-  width: auto;
-  border-radius: 8px;
-  background-color: #cfe2ff;
-  padding: 12px 16px;
-  color: #052c65;
-  border: 1px solid #9ec5fe;
-}
 .table {
-  width: 100%;
-  &_header_item {
-    padding: 8px;
-    text-align: left;
-    font-weight: 900;
-    border-bottom: 1px solid #dee2e6;
-    width: 24%;
-    position: relative;
-    &:first-child {
-      width: 28%;
-    }
-    &:nth-child(2) {
-      width: 19%;
-    }
-    &:nth-child(3) {
-      width: 16%;
-    }
-    &:nth-child(4) {
-      width: 9%;
-    }
-    &:nth-child(5) {
-      width: 18%;
-    }
-    &:last-child {
-      width: 8%;
-    }
-    &_filter {
-      width: 20px;
-      height: 20px;
-      border: none;
-      background-color: #ffffff;
-      padding: 0;
-      margin: 0;
-      position: absolute;
-      left: 66px;
-      color: rgb(225, 91, 81);
-      cursor: pointer;
-    }
-  }
-
   &_body_item {
     padding: 11.5px 8px;
     text-align: left;
@@ -269,36 +221,6 @@ export default {
     font-weight: 500;
     &:first-child {
       font-weight: 900;
-    }
-
-    &_image {
-      width: 34px;
-      height: 34px;
-      object-fit: contain;
-      border: 1px solid #dee2e6;
-      border-radius: 6px;
-      padding: 0;
-      margin: 0;
-    }
-    &_status {
-      font-size: 14px;
-      &_approved {
-        color: #00a524;
-      }
-      &_disabled {
-        color: #d50002;
-      }
-      &_pending {
-        color: #ff9017;
-      }
-    }
-    &_link {
-      color: black;
-      font-weight: 800;
-    }
-    &_buttons {
-      display: flex;
-      gap: 10px;
     }
     &_edit {
       position: relative;
@@ -310,114 +232,6 @@ export default {
       padding: 6px 0;
       color: white;
       cursor: pointer;
-    }
-    &_delete {
-      width: 45px !important;
-      background-color: #d50002;
-      color: white;
-      border-radius: 8px;
-      text-align: center;
-      height: 33px !important;
-      border: none;
-    }
-  }
-}
-
-#featuredCheck {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.175);
-  border-radius: 4px;
-}
-
-#featuredCheck:hover {
-  accent-color: #e15b51 !important;
-}
-#featuredCheck:checked {
-  accent-color: #e15b51 !important;
-}
-#discountCheck {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.175);
-  border-radius: 4px;
-}
-#discountCheck:hover {
-  accent-color: #e15b51 !important;
-}
-.header {
-  height: 70px;
-  border-bottom: 1px solid #dee2e6;
-  display: flex;
-  align-items: center;
-  &__container {
-    padding: 0 16px;
-    height: 40px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  &__toggle {
-    display: flex;
-    align-items: center;
-    &:hover {
-      cursor: pointer;
-    }
-  }
-  &__locale {
-    padding-right: 8px;
-  }
-  &__localeToggle {
-    font-weight: 500;
-    &:hover {
-      cursor: pointer;
-      color: rgba(252, 91, 91);
-    }
-    &::after {
-      display: inline-block;
-      margin-left: 0.255em;
-      vertical-align: 0.255em;
-      content: '';
-      border-top: 5px solid;
-      border-right: 0.3em solid transparent;
-      border-bottom: 0;
-      border-left: 0.3em solid transparent;
-    }
-  }
-  &__locales {
-    position: absolute;
-    top: 19px;
-    right: 0;
-    width: 160px;
-    height: 30px;
-    outline: 1px solid rgba(0, 0, 0, 0.175);
-    border-radius: 8px;
-    z-index: 5;
-    background-color: #ffffff;
-    padding: 10px 0;
-    list-style-type: none;
-
-    &-item {
-      color: #d50002;
-      height: 24px;
-      text-align: left;
-      font-weight: 500;
-      padding: 4px 16px;
-      &:hover {
-        cursor: pointer;
-        background-color: rgba(252, 91, 91);
-        color: #ffffff;
-      }
-    }
-    &-divider {
-      height: 0;
-      width: 100%;
-      border-top: 1px solid rgba(0, 0, 0, 0.175);
-      display: block;
-      margin: 8px 0;
     }
   }
 }

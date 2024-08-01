@@ -101,60 +101,17 @@ export default {
   }
 }
 .table {
-  width: 100%;
-  &_header_item {
-    padding: 8px;
-    text-align: left;
-    font-weight: 900;
-    border-bottom: 1px solid #dee2e6;
-    width: 24%;
-    position: relative;
-    &:first-child {
-      width: 81%;
-    }
-    &:last-child {
-      width: 19%;
-    }
-    &_filter {
-      width: 20px;
-      height: 20px;
-      border: none;
-      background-color: #ffffff;
-      padding: 0;
-      margin: 0;
-      position: absolute;
-      left: 66px;
-      color: rgb(225, 91, 81);
-      cursor: pointer;
-    }
-  }
-
   &_body_item {
     padding: 12px 8px;
     text-align: left;
     border-bottom: 1px solid #dee2e6;
     font-weight: 900;
 
-    &_link {
-      color: black;
-      font-weight: 800;
-    }
     &_buttons {
       display: flex;
       gap: 10px;
     }
-    &_edit {
-      width: 45px !important;
-      background-color: #c9c9c9;
-      border-radius: 8px;
-      text-align: center;
-      height: 21px !important;
-      padding: 6px 0;
-      cursor: pointer;
-    }
-    &_edit > a {
-      color: black;
-    }
+
     &_delete {
       width: 45px !important;
       background-color: #d50002;
@@ -169,5 +126,4 @@ export default {
     }
   }
 }
-
 </style>

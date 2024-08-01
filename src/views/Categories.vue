@@ -113,29 +113,12 @@ export default {
   }
 }
 .table {
-  width: 100%;
-  &_header_item {
-    padding: 8px;
-    text-align: left;
-    font-weight: 900;
-    border-bottom: 1px solid #dee2e6;
-    width: 24%;
-    &:first-child {
-      width: 57%;
-    }
-    &:last-child {
-      width: 19%;
-    }
-  }
 
   &_body_item {
     padding: 8px;
     text-align: left;
     border-bottom: 1px solid #dee2e6;
-    &_link {
-      color: black;
-      font-weight: 800;
-    }
+
     &_buttons {
       display: flex;
       gap: 10px;
