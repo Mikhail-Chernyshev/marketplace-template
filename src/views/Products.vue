@@ -97,7 +97,6 @@
 
 <script>
 import { ref, onMounted, watch } from 'vue';
-import { formatTimestamp } from '../common/utils.js';
 import TableForDataPage from '@/components/TableForDataPage.vue';
 
 export default {
@@ -105,9 +104,7 @@ export default {
   components: { TableForDataPage },
   setup() {
     const fetchData = ref([]);
-    const nameAscending = ref(true);
     const searchQuery = ref('');
-    const chedasdasd = ref(false);
     const query = ref({
       featured: false,
       discount: false,
@@ -179,12 +176,8 @@ export default {
 
     return {
       fetchData,
-      nameAscending,
       searchQuery,
       query,
-      formatTimestamp,
-      chedasdasd,
-      updateFeatureStatus,
       handleChangeFeatured,
     };
   },

@@ -6,25 +6,25 @@
           title="Total Subscription"
           :value="fetchData?.totalSubscription / 1000 + ',000'"
           icon="RiMoneyDollarCircleLine"
-          link="/admin/settings/subscription-history"
+          link="/settings/subscription-history"
         />
         <DashboardCard
           title="Shops"
           :value="fetchData?.totalShop"
           icon="RiStore2Line"
-          link="/admin/settings/subscription-history"
+          link="/settings/subscription-history"
         />
         <DashboardCard
           title="Products"
           :value="fetchData?.totalProduct"
           icon="RiBox3Line"
-          link="/admin/settings/subscription-history"
+          link="/settings/subscription-history"
         />
         <DashboardCard
           title="Users"
           :value="fetchData?.totalUser"
           icon="RiGroupLine"
-          link="/admin/settings/subscription-history"
+          link="/settings/subscription-history"
         />
       </div>
 

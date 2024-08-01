@@ -39,7 +39,6 @@ export default {
   border-radius: 8px;
   display: flex;
   gap: 16px;
-  //   width: calc(33.3% - 32px);
   &__icon {
     width: 60px;
     height: 60px;

@@ -4,8 +4,7 @@
       <h2 class="cities__header_title">Users</h2>
       <select
         class="cities__header_select"
-        v-model="query.status"
-        @change="updateStatus"
+        v-model="query.typeConnect"
       >
         <option value="email">Email</option>
         <option value="phone">Phone</option>
@@ -14,7 +13,7 @@
         class="cities__header_search"
         id="searchInput"
         type="search"
-        :placeholder="'By ' + query.status + '...'"
+        :placeholder="'By ' + query.typeConnect + '...'"
         v-model="searchQuery"
       />
     </div>
@@ -99,7 +98,7 @@ export default {
     const fetchData = ref([]);
     const searchQuery = ref('');
     const query = ref({
-      status: 'email',
+      typeConnect: 'email',
     });
     const isOpenActionUser = inject('isOpenActionUser');
 
@@ -113,7 +112,7 @@ export default {
       let url = `${process.env.VUE_APP_BASE_URL}/admin/users`;
 
       if (searchQuery.value !== '') {
-        url += `?${query.value.status}=${searchQuery.value}`;
+        url += `?${query.value.typeConnect}=${searchQuery.value}`;
       }
       try {
         const response = await fetch(url);

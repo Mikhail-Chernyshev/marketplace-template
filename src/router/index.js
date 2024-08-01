@@ -6,6 +6,7 @@ import Cities from '@/views/Cities.vue';
 import Shops from '@/views/Shops.vue';
 import Products from '@/views/Products.vue';
 import Users from '../views/Users.vue';
+import SubscriptionHistory from '../views/Subscription/SubscriptionHistory.vue';
 
 const routes = [
   {
@@ -22,6 +23,15 @@ const routes = [
     path: '/settings',
     name: 'SettingsPage',
     component: Settings,
+  },
+  {
+    path: '/settings/subscription-history',
+    name: 'SubscriptionHistoryPage',
+    component: SubscriptionHistory,
+    meta: {
+      path: 'settings',
+      subPath:'subscription-history',
+    },
   },
   {
     path: '/cities',
