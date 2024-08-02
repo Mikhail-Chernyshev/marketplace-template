@@ -64,7 +64,8 @@ export default {
             delete selectedDates.value[1];
             formattedDate.value = '';
           }
-          updateDate();
+                      updateDate();
+
         },
       });
     });

@@ -71,7 +71,18 @@
           </span>
         </td>
         <td class="table_body_item">
-          <button class="table_body_item_view"><RiEyeFill :size="20" /></button>
+          <ModalData
+            title="Subscription Detail"
+            :closeModal="closeSubscription"
+            :item="item"
+            v-if="isShowSubscription && shopId === item.shop.id"
+          />
+          <button
+            @click="showSubscription(item.shop.id)"
+            class="table_body_item_view"
+          >
+            <RiEyeFill :size="20" />
+          </button>
         </td>
       </template>
     </TableForDataPage>
@@ -84,6 +95,7 @@ import DatePickerInput from '../../components/DatePickerInput.vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
 import { formatTimestamp } from '../../common/utils.js';
 import { RiEyeFill } from '@remixicon/vue';
+import ModalData from '../../components/ModalData.vue';
 
 export default {
   name: 'SubscriptionHistoryPage',
@@ -91,12 +103,15 @@ export default {
     DatePickerInput,
     TableForDataPage,
     RiEyeFill,
+    ModalData,
   },
   setup() {
     const fetchData = ref([]);
     const status = ref(' ');
     const dateValue = ref('');
     const selectedDates = ref([]);
+    const isShowSubscription = ref(false);
+    const shopId = ref(0);
     const headers = ref([
       { label: 'SUBSCRIBE BY', key: 'SUBSCRIBE', minWidth: 200 },
       { label: 'AMOUNT', key: 'AMOUNT', minWidth: 200 },
@@ -108,6 +123,16 @@ export default {
 
     const capitalizeFirstLetter = (string) =>
       string.charAt(0).toUpperCase() + string.slice(1);
+
+    const showSubscription = (id) => {
+      isShowSubscription.value = true;
+      shopId.value = id;
+    };
+
+    const closeSubscription = () => {
+      isShowSubscription.value = false;
+      shopId.value = 0;
+    };
 
     const fetchSubscriptionsData = async () => {
       let url = `${process.env.VUE_APP_BASE_URL}/admin/shop-subscriptions?time-zone=Europe/Moscow`;
@@ -140,6 +165,10 @@ export default {
       dateValue,
       capitalizeFirstLetter,
       headers,
+      isShowSubscription,
+      showSubscription,
+      shopId,
+      closeSubscription,
     };
   },
 };
