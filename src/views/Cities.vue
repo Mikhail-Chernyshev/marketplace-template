@@ -17,8 +17,33 @@
         <td class="table_body_item">
           <span>{{ item.name }}</span>
         </td>
+
         <td class="table_body_item">
           <div class="table_body_item_buttons">
+            <ModalData
+              v-if="isOpenDeleteCity && cityId === item.id"
+              :title="'Confirm'"
+              :text="'Are you sure to confirm?'"
+            >
+              <template #modal-buttons>
+                <button
+                  type="button"
+                  class="modal-close"
+                  aria-label="Close"
+                  @click="closeModal()"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  class="modal-confirm"
+                  aria-label="Close"
+                  @click="deleteCity()"
+                >
+                  Proceed
+                </button>
+              </template>
+            </ModalData>
             <button class="table_body_item_delete" @click="handleDelete(item)">
               <RiDeleteBinLine :size="20" />
             </button>
@@ -33,16 +58,20 @@
 import { ref, onMounted } from 'vue';
 import { RiDeleteBinLine } from '@remixicon/vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
+import ModalData from '../components/ModalData.vue';
 
 export default {
   name: 'CitiesPage',
   components: {
     RiDeleteBinLine,
     TableForDataPage,
+    ModalData,
   },
   setup() {
     const fetchData = ref([]);
     const nameAscending = ref(true);
+    const isOpenDeleteCity = ref(false);
+    const cityId = ref(null);
 
     const fetchCitiesData = async () => {
       try {
@@ -56,6 +85,21 @@ export default {
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         fetchData.value = [];
+      }
+    };
+
+    const fetchDeleteCity = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.VUE_APP_BASE_URL}/admin/cities/${cityId.value}`,
+          { method: 'DELETE' }
+        );
+        if (!response.ok) {
+          throw new Error('Ошибка: ' + response.statusText);
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+        throw error;
       }
     };
 
@@ -73,7 +117,23 @@ export default {
     };
 
     const handleDelete = (item) => {
-      console.log('Удалить элемент', item);
+      isOpenDeleteCity.value = true;
+      cityId.value = item.id;
+    };
+
+    const closeModal = () => {
+      isOpenDeleteCity.value = false;
+      cityId.value = null;
+    };
+
+    const deleteCity = () => {
+      fetchDeleteCity()
+        .then(() => {
+          closeModal();
+        })
+        .catch((error) => {
+          console.error('Не удалось удалить город:', error);
+        });
     };
 
     return {
@@ -81,6 +141,11 @@ export default {
       nameAscending,
       filterData,
       handleDelete,
+      isOpenDeleteCity,
+      cityId,
+      closeModal,
+      fetchDeleteCity,
+      deleteCity,
     };
   },
 };
@@ -123,7 +188,35 @@ export default {
       > svg {
         margin-top: 3px;
       }
+      :hover {
+        cursor: pointer;
+      }
     }
+  }
+}
+.modal-close {
+  appearance: none;
+  font-size: 16px;
+  padding: 6px 12px;
+  border: none;
+  background-color: #c9c9c9;
+  border-radius: 6px;
+  height: 38px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.modal-confirm {
+  appearance: none;
+  font-size: 16px;
+  padding: 6px 12px;
+  border: none;
+  color: white;
+  background-color: #e15b51;
+  border-radius: 6px;
+  height: 38px;
+  &:hover {
+    cursor: pointer;
   }
 }
 </style>

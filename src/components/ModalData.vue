@@ -4,23 +4,24 @@
       <div class="modal-header">
         <h4 class="modal-title">{{ title }}</h4>
       </div>
-      <SubscriptionTransactionDetail :subscription="item" />
+      <SubscriptionTransactionDetail v-if="item" :subscription="item" />
+      <div class="modal-body">{{ text }}</div>
       <div class="modal-footer">
-        <button
+        <slot name="modal-buttons"></slot>
+        <!-- <button
           type="button"
           class="modal-close"
           aria-label="Close"
           @click="closeModal()"
         >
           Close
-        </button>
+        </button> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { onMounted } from 'vue';
 import SubscriptionTransactionDetail from './SubscriptionTransactionDetail.vue';
 
 export default {
@@ -38,10 +39,11 @@ export default {
       type: Function,
       required: true,
     },
+    text: {
+      type: String,
+    },
   },
   setup() {
-    onMounted(() => {});
-
     return {};
   },
 };
@@ -73,12 +75,16 @@ export default {
   &-title {
     margin: 0;
   }
+  &-body {
+    padding: 16px;
+  }
   &-footer {
     border-top: 1px solid #dee2e6;
     padding: 12px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    gap: 12px;
   }
   &-close {
     appearance: none;

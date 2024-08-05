@@ -73,10 +73,20 @@
         <td class="table_body_item">
           <ModalData
             title="Subscription Detail"
-            :closeModal="closeSubscription"
             :item="item"
             v-if="isShowSubscription && shopId === item.shop.id"
-          />
+          >
+            <template #modal-buttons>
+              <button
+                type="button"
+                class="modal-close"
+                aria-label="Close"
+                @click="closeSubscription()"
+              >
+                Close
+              </button>
+            </template>
+          </ModalData>
           <button
             @click="showSubscription(item.shop.id)"
             class="table_body_item_view"
@@ -260,6 +270,18 @@ export default {
         color: #ff9017;
       }
     }
+  }
+}
+.modal-close {
+  appearance: none;
+  font-size: 16px;
+  padding: 6px 12px;
+  border: none;
+  background-color: #c9c9c9;
+  border-radius: 6px;
+  height: 38px;
+  &:hover {
+    cursor: pointer;
   }
 }
 </style>
