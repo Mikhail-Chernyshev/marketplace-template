@@ -2,13 +2,12 @@
   <div class="categories">
     <div class="categories__header">
       <h2 class="categories__header_title">Categories</h2>
-
-      <Link
-        href="/admin/categories/create-category"
+      <router-link
+        to="categories/create-category"
         class="categories__header_button"
       >
         Add new
-      </Link>
+      </router-link>
     </div>
 
     <TableForDataPage
@@ -22,7 +21,7 @@
     >
       <template #row="{ item }">
         <td class="table_body_item">
-          <span>{{ item.names[0].name }}</span>
+          <span>{{ item.names[0]?.name }}</span>
         </td>
         <td class="table_body_item">
           {{ formatTimestamp(item.audit?.createdAt) }}
@@ -30,7 +29,7 @@
         <td class="table_body_item">
           <div class="table_body_item_buttons">
             <div class="table_body_item_edit">
-              <router-link :to="`/admin/categories/${item.id}`">
+              <router-link :to="`/categories/${item.id}`">
                 <RiPencilFill size="20" />
               </router-link>
             </div>
@@ -109,11 +108,15 @@ export default {
       font-weight: 600;
       text-align: center;
       line-height: 37px;
+      appearance: none;
+      text-decoration: none;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }
 .table {
-
   &_body_item {
     padding: 8px;
     text-align: left;

@@ -7,6 +7,8 @@ import Shops from '@/views/Shops.vue';
 import Products from '@/views/Products.vue';
 import Users from '../views/Users.vue';
 import SubscriptionHistory from '../views/Subscription/SubscriptionHistory.vue';
+import CreateCategory from '@/views/Categories/CreateCategory.vue';
+import UpdateCategory from '@/views/Categories/UpdateCategory.vue';
 
 const routes = [
   {
@@ -20,6 +22,24 @@ const routes = [
     component: Categories,
   },
   {
+    path: '/categories/:id',
+    name: 'UpdateCategoryPage',
+    component: UpdateCategory,
+    meta: {
+      path: 'categories',
+      subPath: 'update-category',
+    },
+  },
+  {
+    path: '/categories/create-category',
+    name: 'CreateCategoryPage',
+    component: CreateCategory,
+    meta: {
+      path: 'categories',
+      subPath: 'create-category',
+    },
+  },
+  {
     path: '/settings',
     name: 'SettingsPage',
     component: Settings,
@@ -30,7 +50,7 @@ const routes = [
     component: SubscriptionHistory,
     meta: {
       path: 'settings',
-      subPath:'subscription-history',
+      subPath: 'subscription-history',
     },
   },
   {

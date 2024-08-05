@@ -12,19 +12,19 @@
           title="Shops"
           :value="fetchData?.totalShop"
           icon="RiStore2Line"
-          link="/settings/subscription-history"
+          link="/shops"
         />
         <DashboardCard
           title="Products"
           :value="fetchData?.totalProduct"
           icon="RiBox3Line"
-          link="/settings/subscription-history"
+          link="/products"
         />
         <DashboardCard
           title="Users"
           :value="fetchData?.totalUser"
           icon="RiGroupLine"
-          link="/settings/subscription-history"
+          link="/users"
         />
       </div>
 
