@@ -120,20 +120,19 @@ export default {
 
     const fetchProductsData = async () => {
       let url = `${process.env.VUE_APP_BASE_URL}/admin/products`;
-
+      console.log(searchQuery, query.value.featured, query.value.discount);
       if (searchQuery.value !== '') {
         url += `?q=${searchQuery.value}`;
-      } else {
-        const queryParams = [];
-        if (query.value.featured !== undefined) {
-          queryParams.push(`featured=${query.value.featured}`);
-        }
-        if (query.value.discount !== undefined) {
-          queryParams.push(`discount=${query.value.discount}`);
-        }
-        if (queryParams.length) {
-          url += `?${queryParams.join('&')}`;
-        }
+      }
+      const queryParams = [];
+      if (query.value.featured) {
+        queryParams.push(`featured=${query.value.featured}`);
+      }
+      if (query.value.discount) {
+        queryParams.push(`discount=${query.value.discount}`);
+      }
+      if (queryParams.length) {
+        url += `?${queryParams.join('&')}`;
       }
 
       try {

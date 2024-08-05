@@ -7,6 +7,7 @@
       <h3 class="settings__container_title">WEBSITE</h3>
       <div class="settings__container_items">
         <SettingsItem
+          path="staff-users"
           title="Staff"
           subtitle="Manage staff users"
           bgColor="#00A524"

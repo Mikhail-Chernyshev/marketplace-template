@@ -1,5 +1,6 @@
 <template>
   <div
+    @click="move"
     :style="{ width: `calc(33.3% - ${numberForWidth * 16}px)` }"
     role="button"
     class="item"
@@ -15,6 +16,8 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+
 export default {
   name: 'SettingsItem',
   props: {
@@ -28,6 +31,18 @@ export default {
     },
     numberForWidth: { type: String, default: '' },
     bgColor: { type: String, default: '' },
+    path: { type: String },
+  },
+  setup(props) {
+    const router = useRouter();
+
+    const move = () => {
+      router.push(`/settings/${props.path}`);
+    };
+
+    return {
+      move,
+    };
   },
 };
 </script>
@@ -39,6 +54,9 @@ export default {
   border-radius: 8px;
   display: flex;
   gap: 16px;
+  &:hover {
+    cursor: pointer;
+  }
   &__icon {
     width: 60px;
     height: 60px;

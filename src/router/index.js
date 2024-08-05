@@ -9,6 +9,8 @@ import Users from '../views/Users.vue';
 import SubscriptionHistory from '../views/Subscription/SubscriptionHistory.vue';
 import CreateCategory from '@/views/Categories/CreateCategory.vue';
 import UpdateCategory from '@/views/Categories/UpdateCategory.vue';
+import StaffUsers from '@/views/Settings/StaffUsers.vue';
+import EditUser from '@/views/Settings/StaffUsers/EditUser.vue';
 
 const routes = [
   {
@@ -51,6 +53,24 @@ const routes = [
     meta: {
       path: 'settings',
       subPath: 'subscription-history',
+    },
+  },
+  {
+    path: '/settings/staff-users',
+    name: 'StaffUsersPage',
+    component: StaffUsers,
+    meta: {
+      path: 'settings',
+      subPath: 'staff-users',
+    },
+  },
+  {
+    path: '/settings/staff-users/:id',
+    name: 'EditUserPage',
+    component: EditUser,
+    meta: {
+      path: 'settings',
+      subPath: 'staff-users',
     },
   },
   {

@@ -1,7 +1,10 @@
 <template>
   <div>
     <table class="table">
-      <thead class="table_header">
+      <p class="nothing" v-if="items?.length === 0">
+        {{ emptyMessage }}
+      </p>
+      <thead v-else class="table_header">
         <tr>
           <th
             v-for="header in headers"
@@ -24,10 +27,8 @@
           </th>
         </tr>
       </thead>
-      <p class="nothing" v-if="items?.length === 0">
-        {{ emptyMessage }}
-      </p>
-      <tbody class="table_body" v-else>
+
+      <tbody class="table_body">
         <tr v-for="item in items" :key="item.id">
           <slot name="row" :item="item"></slot>
         </tr>
