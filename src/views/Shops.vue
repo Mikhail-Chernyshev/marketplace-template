@@ -1,16 +1,16 @@
 <template>
-  <div class="cities">
-    <div class="cities__header">
-      <h2 class="cities__header_title">Shops</h2>
+  <div class="shops">
+    <div class="shops__header">
+      <h2 class="shops__header_title">Shops</h2>
       <input
-        class="cities__header_search"
+        class="shops__header_search"
         id="searchInput"
         type="search"
         placeholder="Search..."
         v-model="searchQuery"
         @input="updateInput"
       />
-      <select class="cities__header_select" v-model="status">
+      <select class="shops__header_select" v-model="status">
         <option value=" ">All status</option>
         <option value="PENDING">Pending</option>
         <option value="APPROVED">Approved</option>
@@ -20,15 +20,7 @@
 
     <TableForDataPage
       :items="fetchData.contents"
-      :headers="[
-        { label: 'IMAGE', minWidth: 100 },
-        { label: 'NAME', minWidth: 200 },
-        { label: 'HEADLINE', minWidth: 100 },
-        { label: 'STATUS', minWidth: 120 },
-        { label: 'EXPIRED AT', minWidth: 150 },
-        { label: 'CREATED AT', minWidth: 150 },
-        { label: 'ACTION', minWidth: 150 },
-      ]"
+      :headers="tableHeaders"
       emptyMessage="No shops found"
     >
       <template #row="{ item }">
@@ -81,7 +73,7 @@
         <td class="table_body_item">
           <div class="table_body_item_buttons">
             <div class="table_body_item_edit">
-              <router-link :to="`/admin/categories/${item.id}`">
+              <router-link :to="`/admin/shops/${item.id}`">
                 <RiPencilFill size="20" />
               </router-link>
             </div>
@@ -99,7 +91,7 @@ import TableForDataPage from '@/components/TableForDataPage.vue';
 import { formatTimestamp } from '../common/utils.js';
 
 export default {
-  name: 'CitiesPage',
+  name: 'ShopsPage',
   components: {
     RiPencilFill,
     TableForDataPage,
@@ -108,6 +100,15 @@ export default {
     const fetchData = ref([]);
     const searchQuery = ref('');
     const status = ref(' ');
+    const tableHeaders = [
+      { label: 'IMAGE', minWidth: 100 },
+      { label: 'NAME', minWidth: 200 },
+      { label: 'HEADLINE', minWidth: 100 },
+      { label: 'STATUS', minWidth: 120 },
+      { label: 'EXPIRED AT', minWidth: 150 },
+      { label: 'CREATED AT', minWidth: 150 },
+      { label: 'ACTION', minWidth: 150 },
+    ];
 
     const updateInput = () => {
       setTimeout(() => {
@@ -156,14 +157,14 @@ export default {
       status,
       updateInput,
       formatTimestamp,
+      tableHeaders,
     };
   },
 };
 </script>
 <style scoped lang="scss">
-.cities {
+.shops {
   padding: 16px 12px;
-  flex-grow: 1;
   &__header {
     display: flex;
     justify-content: space-between;

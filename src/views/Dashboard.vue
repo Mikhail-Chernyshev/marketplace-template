@@ -32,13 +32,7 @@
         <h4 class="subscriptions__title">Recent subscriptions</h4>
         <TableForDataPage
           :items="fetchData?.recentSubscriptions"
-          :headers="[
-            { label: 'SUBSCRIBE BY' },
-            { label: 'AMOUNT' },
-            { label: 'DURATION' },
-            { label: 'ISSUED AT' },
-            { label: 'PROMO CODE' },
-          ]"
+          :headers="tableHeaders"
           emptyMessage="No subscriptions found"
         >
           <template #row="{ item }">
@@ -52,9 +46,7 @@
             </td>
             <td class="table_body_item">
               <span>{{ item.subTotalPrice }}</span>
-              <span v-if="item.promoCode">
-                (-{{ item.discount }})
-              </span>
+              <span v-if="item.promoCode"> (-{{ item.discount }}) </span>
             </td>
             <td class="table_body_item">{{ item.duration }} days</td>
             <td class="table_body_item">
@@ -88,6 +80,13 @@ export default {
   },
   setup() {
     const fetchData = ref(null);
+    const tableHeaders = [
+      { label: 'SUBSCRIBE BY' },
+      { label: 'AMOUNT' },
+      { label: 'DURATION' },
+      { label: 'ISSUED AT' },
+      { label: 'PROMO CODE' },
+    ];
 
     const fetchDashboardData = async () => {
       try {
@@ -106,10 +105,11 @@ export default {
     onMounted(() => {
       fetchDashboardData();
     });
-    
+
     return {
       fetchData,
       formatTimestamp,
+      tableHeaders,
     };
   },
 };

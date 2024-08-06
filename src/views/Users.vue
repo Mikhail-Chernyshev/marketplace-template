@@ -1,13 +1,13 @@
 <template>
-  <div class="cities">
-    <div class="cities__header">
-      <h2 class="cities__header_title">Users</h2>
-      <select class="cities__header_select" v-model="query.typeConnect">
+  <div class="users">
+    <div class="users__header">
+      <h2 class="users__header_title">Users</h2>
+      <select class="users__header_select" v-model="query.typeConnect">
         <option value="email">Email</option>
         <option value="phone">Phone</option>
       </select>
       <input
-        class="cities__header_search"
+        class="users__header_search"
         id="searchInput"
         type="search"
         :placeholder="'By ' + query.typeConnect + '...'"
@@ -17,14 +17,7 @@
 
     <TableForDataPage
       :items="fetchData.contents"
-      :headers="[
-        { label: 'NAME', key: 'name', minWidth: 300 },
-        { label: 'EMAIL', key: 'email', minWidth: 200 },
-        { label: 'PHONE', key: 'phone', minWidth: 150 },
-        { label: 'ROLE', key: 'role', minWidth: 100 },
-        { label: 'CREATED AT', key: 'createdAt', minWidth: 200 },
-        { label: 'ACTION', key: 'action', minWidth: 150 },
-      ]"
+      :headers="tableHeaders"
       emptyMessage="No users found"
     >
       <template #row="{ item }">
@@ -53,21 +46,21 @@
             />
             <ul
               v-if="isOpenActionUser?.open && isOpenActionUser?.id === item.id"
-              class="header__locales"
+              class="table_body_item-role"
             >
               <li
                 v-if="item.role !== 'USER'"
                 role="button"
-                @click="handleDismissAdmin(item.id)"
-                class="header__locales-item"
+                @click="handleAdminAction(item.id, 'dismiss')"
+                class="table_body_item-role-item"
               >
                 Dismiss Admin
               </li>
               <li
                 v-else
                 role="button"
-                @click="handleGrantAdmin(item.id)"
-                class="header__locales-item"
+                @click="handleAdminAction(item.id, 'grant')"
+                class="table_body_item-role-item"
               >
                 Grant Admin
               </li>
@@ -86,7 +79,7 @@ import { RiPencilFill } from '@remixicon/vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
 
 export default {
-  name: 'CitiesPage',
+  name: 'UsersPage',
   components: {
     RiPencilFill,
     TableForDataPage,
@@ -98,6 +91,14 @@ export default {
       typeConnect: 'email',
     });
     const isOpenActionUser = inject('isOpenActionUser');
+    const tableHeaders = [
+      { label: 'NAME', key: 'name', minWidth: 300 },
+      { label: 'EMAIL', key: 'email', minWidth: 200 },
+      { label: 'PHONE', key: 'phone', minWidth: 150 },
+      { label: 'ROLE', key: 'role', minWidth: 100 },
+      { label: 'CREATED AT', key: 'createdAt', minWidth: 200 },
+      { label: 'ACTION', key: 'action', minWidth: 150 },
+    ];
 
     const handleOpenActionUser = (event, idUser) => {
       event.stopPropagation();
@@ -123,8 +124,17 @@ export default {
       }
     };
 
-    const handleDismissAdmin = async (id) => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/staff-users/${id}/dismiss-admin`;
+    const handleAdminAction = async (id, action) => {
+      let url;
+      if (action === 'grant') {
+        url = `${process.env.VUE_APP_BASE_URL}/admin/users/${id}/grant-admin`;
+      } else if (action === 'dismiss') {
+        url = `${process.env.VUE_APP_BASE_URL}/admin/staff-users/${id}/dismiss-admin`;
+      } else {
+        console.error('Invalid action:', action);
+        return;
+      }
+
       try {
         const response = await fetch(url, { method: 'PUT' });
         if (!response.ok) {
@@ -136,18 +146,6 @@ export default {
       }
     };
 
-    const handleGrantAdmin = async (id) => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/users/${id}/grant-admin`;
-      try {
-        const response = await fetch(url, { method: 'PUT' });
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        fetchUsersData();
-      } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
-      }
-    };
     watch(searchQuery, fetchUsersData);
 
     onMounted(() => {
@@ -161,45 +159,14 @@ export default {
       formatTimestamp,
       isOpenActionUser,
       handleOpenActionUser,
-      handleDismissAdmin,
-      handleGrantAdmin,
+      handleAdminAction,
+      tableHeaders,
     };
   },
 };
 </script>
 <style scoped lang="scss">
-.header__locales {
-  position: absolute;
-  top: 40px;
-  right: 16px;
-  width: 160px;
-  height: 32px;
-  outline: 1px solid rgba(0, 0, 0, 0.175);
-  border-radius: 8px;
-  z-index: 5;
-  background-color: #ffffff;
-  padding: 10px 0;
-  list-style-type: none;
-  &-item {
-    height: 24px;
-    font-weight: 500;
-    padding: 4px 16px;
-    color: #d50002;
-    &:hover {
-      cursor: pointer;
-      background-color: rgba(252, 91, 91);
-      color: #ffffff;
-    }
-  }
-  &-divider {
-    height: 0;
-    width: 100%;
-    border-top: 1px solid rgba(0, 0, 0, 0.175);
-    display: block;
-    margin: 8px 0;
-  }
-}
-.cities {
+.users {
   padding: 16px 12px;
   flex-grow: 1;
   &__header {
@@ -248,6 +215,30 @@ export default {
     font-weight: 500;
     &:first-child {
       font-weight: 900;
+    }
+    &-role {
+      position: absolute;
+      top: 20px;
+      right: 16px;
+      width: 160px;
+      height: 32px;
+      outline: 1px solid rgba(0, 0, 0, 0.175);
+      border-radius: 8px;
+      z-index: 5;
+      background-color: #ffffff;
+      padding: 10px 0;
+      list-style-type: none;
+      &-item {
+        height: 24px;
+        font-weight: 500;
+        padding: 4px 16px;
+        color: #d50002;
+        &:hover {
+          cursor: pointer;
+          background-color: rgba(252, 91, 91);
+          color: #ffffff;
+        }
+      }
     }
     &_edit {
       position: relative;
