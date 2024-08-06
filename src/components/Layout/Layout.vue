@@ -46,6 +46,7 @@ export default {
       }
       if (isOpenActionUser.value.open) {
         isOpenActionUser.value.open = !isOpenActionUser.value.open;
+        isOpenActionUser.value.id = null;
       }
     }
     function showLocaleChoice() {

@@ -1,44 +1,66 @@
 <template>
-  <div class="subscriptionHistory">
-    <div class="subscriptionHistory__header">
-      <h2 class="subscriptionHistory__header_title">Staff Users</h2>
-      <h3 class="subscriptionHistory__header_route">
+  <div class="subscriptionPlan">
+    <div class="subscriptionPlan__header">
+      <div class="subscriptionPlan__header-x">
+        <h2 class="subscriptionPlan__header_title">Promo Codes</h2>
+        <select class="subscriptionPlan__header_select" v-model="typePromos">
+          <option value=" ">All promos</option>
+          <option value="AVAILABLE">Available</option>
+          <option value="USED">Used</option>
+        </select>
+
+        <router-link
+          to="promo-codes/create-promo-code"
+          class="subscriptionPlan__header_button"
+        >
+          Add new
+        </router-link>
+      </div>
+
+      <h3 class="subscriptionPlan__header_route">
         <router-link :to="'/settings'">
           {{ capitalizeFirstLetter($route.meta.path) }}
         </router-link>
-        /{{ ' Staffs' }}
+        /{{ ' Promo codes' }}
       </h3>
     </div>
 
     <TableForDataPage
       :items="fetchData?.contents"
       :headers="headers"
-      emptyMessage="No subscriptions found"
+      emptyMessage="No promocodes found"
     >
       <template #row="{ item }">
         <td class="table_body_item table_body_item_bold">
-          <span> {{ item.name || '' }}</span>
+          <span> {{ item.code || '' }} </span>
         </td>
         <td class="table_body_item">
-          <span> {{ item.email || '' }}</span>
+          {{ item.value / 1000 + ',000' || 0 }}
         </td>
         <td class="table_body_item">
-          <span> {{ item.phone || '' }}</span>
+          <span>{{ item.valueType === 'FIXED_AMOUNT' ? '.00' : '%' }}</span>
         </td>
         <td class="table_body_item">
-          <span> {{ item.role || '' }}</span>
+          <span class="table_body_item_status">{{
+            item.used ? 'YES' : 'NO'
+          }}</span>
+        </td>
+        <td class="table_body_item">
+          <span>
+            {{ item.expiredAt ? formatTimestamp(item.expiredAt) : '--' }}
+          </span>
         </td>
         <td class="table_body_item">
           <div class="table_body_item_buttons">
             <div class="table_body_item_edit">
-              <router-link :to="`/settings/staff-users/${item.id}`">
+              <router-link :to="`/settings/promo-codes/update/${item.id}`">
                 <RiPencilFill size="20" />
               </router-link>
             </div>
             <ModalData
-              v-if="isOpenDeleteUser && userId === item.id"
+              v-if="isOpenDeletePromocode && promocodeId === item.id"
               :title="'Confirm'"
-              :text="`Are you sure to remove user: ${item.name}?`"
+              :text="'Are you sure to delete?'"
             >
               <template #modal-buttons>
                 <button
@@ -53,7 +75,7 @@
                   type="button"
                   class="modal-confirm"
                   aria-label="Close"
-                  @click="deleteCategory()"
+                  @click="deletePromocode()"
                 >
                   Proceed
                 </button>
@@ -70,37 +92,76 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
 import { formatTimestamp } from '../../common/utils.js';
-import { RiDeleteBinLine, RiPencilFill } from '@remixicon/vue';
+import { RiPencilFill, RiDeleteBinLine } from '@remixicon/vue';
 import ModalData from '../../components/ModalData.vue';
 
 export default {
-  name: 'StaffUsersPage',
+  name: 'PromoCodesPage',
   components: {
     TableForDataPage,
-    RiDeleteBinLine,
     RiPencilFill,
+    RiDeleteBinLine,
     ModalData,
   },
   setup() {
-    const isOpenDeleteUser = ref(false);
-    const userId = ref(null);
     const fetchData = ref([]);
+    const isOpenDeletePromocode = ref(false);
+    const promocodeId = ref(null);
+    const typePromos = ref(' ');
     const headers = ref([
-      { label: 'NAME', key: 'NAME', minWidth: 300 },
-      { label: 'EMAIL', key: 'EMAIL', minWidth: 200 },
-      { label: 'PHONE', key: 'PHONE', minWidth: 150 },
-      { label: 'ROLE', key: 'ROLE', minWidth: 100 },
-      { label: 'ACTION', key: 'ACTION', minWidth: 150 },
+      { label: 'CODE', key: 'CODE', minWidth: 250 },
+      { label: 'AMOUNT', key: 'AMOUNT', minWidth: 200 },
+      { label: 'TYPE', key: 'TYPE', minWidth: 150 },
+      { label: 'USED', key: 'USED', minWidth: 100 },
+      { label: 'EXPIRED AT', key: 'EXPIRED', minWidth: 200 },
+      { label: 'ACTION', key: 'ACTION', minWidth: 100 },
     ]);
 
+    const handleDelete = (item) => {
+      isOpenDeletePromocode.value = true;
+      promocodeId.value = item.id;
+    };
     const capitalizeFirstLetter = (string) =>
       string.charAt(0).toUpperCase() + string.slice(1);
 
-    const fetchSubscriptionsData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/users?staff-only=true`;
+    const closeModal = () => {
+      isOpenDeletePromocode.value = false;
+      promocodeId.value = null;
+    };
+
+    const fetchDeletePromocode = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.VUE_APP_BASE_URL}/admin/subscription-promos/${promocodeId.value}`,
+          { method: 'DELETE' }
+        );
+        if (!response.ok) {
+          throw new Error('Ошибка: ' + response.statusText);
+        }
+        fetchPromoCodesData();
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+        throw error;
+      }
+    };
+    const deletePromocode = () => {
+      fetchDeletePromocode()
+        .then(() => {
+          closeModal();
+        })
+        .catch((error) => {
+          console.error('Не удалось удалить город:', error);
+        });
+    };
+    const fetchPromoCodesData = async () => {
+      let url = `${process.env.VUE_APP_BASE_URL}/admin/subscription-promos`;
+
+      if (typePromos.value !== ' ') {
+        url += `?${typePromos.value.toLowerCase()}=true`;
+      }
 
       try {
         const response = await fetch(url);
@@ -113,16 +174,10 @@ export default {
         fetchData.value = [];
       }
     };
-    const handleDelete = (item) => {
-      isOpenDeleteUser.value = true;
-      userId.value = item.id;
-    };
-    const closeModal = () => {
-      isOpenDeleteUser.value = false;
-      userId.value = null;
-    };
+    watch(typePromos, fetchPromoCodesData);
+
     onMounted(() => {
-      fetchSubscriptionsData();
+      fetchPromoCodesData();
     });
 
     return {
@@ -131,15 +186,17 @@ export default {
       capitalizeFirstLetter,
       headers,
       handleDelete,
-      isOpenDeleteUser,
-      userId,
+      isOpenDeletePromocode,
+      promocodeId,
+      deletePromocode,
       closeModal,
+      typePromos,
     };
   },
 };
 </script>
 <style scoped lang="scss">
-.subscriptionHistory {
+.subscriptionPlan {
   padding: 16px 12px;
   flex-grow: 1;
   &__header {
@@ -147,6 +204,42 @@ export default {
     justify-content: space-between;
     flex-direction: column;
     margin-bottom: 30px;
+    &_select {
+      font-size: 16px;
+      padding: 6px 16px 6px 12px;
+      width: 137px;
+      height: 50px;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      margin-right: 16px;
+      &:focus {
+        border-color: rgb(225, 91, 81);
+        outline: none;
+      }
+    }
+    &_button {
+      color: #ffffff;
+      border-radius: 6px;
+      width: 92px;
+      height: 38px;
+      background-color: #e15b51;
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 37px;
+      appearance: none;
+      text-decoration: none;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    &-x {
+      display: flex;
+      align-items: center;
+    }
+
     &_title {
       font-size: 30px;
       margin: -3px 0 0 0;
@@ -211,7 +304,9 @@ export default {
       text-align: center;
       height: 33px !important;
       border: none;
-      cursor: pointer;
+      &:hover {
+        cursor: pointer;
+      }
     }
     &_bold {
       padding: 16px 8px;
@@ -253,7 +348,18 @@ export default {
     }
   }
 }
-
+.modal-close {
+  appearance: none;
+  font-size: 16px;
+  padding: 6px 12px;
+  border: none;
+  background-color: #c9c9c9;
+  border-radius: 6px;
+  height: 38px;
+  &:hover {
+    cursor: pointer;
+  }
+}
 .modal-close {
   appearance: none;
   font-size: 16px;

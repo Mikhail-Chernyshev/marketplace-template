@@ -2,10 +2,7 @@
   <div class="cities">
     <div class="cities__header">
       <h2 class="cities__header_title">Users</h2>
-      <select
-        class="cities__header_select"
-        v-model="query.typeConnect"
-      >
+      <select class="cities__header_select" v-model="query.typeConnect">
         <option value="email">Email</option>
         <option value="phone">Phone</option>
       </select>
@@ -55,7 +52,7 @@
               size="20"
             />
             <ul
-              v-if="isOpenActionUser.open && isOpenActionUser.id === item.id"
+              v-if="isOpenActionUser?.open && isOpenActionUser?.id === item.id"
               class="header__locales"
             >
               <li
@@ -104,7 +101,7 @@ export default {
 
     const handleOpenActionUser = (event, idUser) => {
       event.stopPropagation();
-      isOpenActionUser.value.open = !isOpenActionUser.value.open;
+      isOpenActionUser.value.open = true;
       isOpenActionUser.value.id = idUser;
     };
 
@@ -171,6 +168,37 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.header__locales {
+  position: absolute;
+  top: 40px;
+  right: 16px;
+  width: 160px;
+  height: 32px;
+  outline: 1px solid rgba(0, 0, 0, 0.175);
+  border-radius: 8px;
+  z-index: 5;
+  background-color: #ffffff;
+  padding: 10px 0;
+  list-style-type: none;
+  &-item {
+    height: 24px;
+    font-weight: 500;
+    padding: 4px 16px;
+    color: #d50002;
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(252, 91, 91);
+      color: #ffffff;
+    }
+  }
+  &-divider {
+    height: 0;
+    width: 100%;
+    border-top: 1px solid rgba(0, 0, 0, 0.175);
+    display: block;
+    margin: 8px 0;
+  }
+}
 .cities {
   padding: 16px 12px;
   flex-grow: 1;

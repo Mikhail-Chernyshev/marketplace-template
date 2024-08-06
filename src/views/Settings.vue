@@ -18,7 +18,7 @@
           </template>
         </SettingsItem>
         <SettingsItem
-        path="site-setting"
+          path="site-setting"
           title="Site Settings"
           subtitle="Manage site settings"
           bgColor="#C9C9C9"
@@ -34,7 +34,8 @@
       <h3 class="settings__container_title">SUBSCRIPTIONS</h3>
       <div class="settings__container_items">
         <SettingsItem
-          title="Subscrription plans"
+          path="subscription-plans"
+          title="Subscription plans"
           subtitle="Manage subscription plans"
           bgColor="#E15B51"
           numberForWidth="2"
@@ -44,6 +45,7 @@
           </template>
         </SettingsItem>
         <SettingsItem
+          path="promo-codes"
           title="Promo Codes"
           subtitle="Manage subscription promos"
           bgColor="#FF9017"
@@ -54,6 +56,7 @@
           </template>
         </SettingsItem>
         <SettingsItem
+          path="subscription-history"
           title="Subscription history"
           subtitle="View subscription logs"
           bgColor="#C9C9C9"

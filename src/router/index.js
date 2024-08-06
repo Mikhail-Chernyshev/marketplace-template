@@ -6,12 +6,19 @@ import Cities from '@/views/Cities.vue';
 import Shops from '@/views/Shops.vue';
 import Products from '@/views/Products.vue';
 import Users from '../views/Users.vue';
-import SubscriptionHistory from '../views/Subscription/SubscriptionHistory.vue';
+import SubscriptionHistory from '../views/Settings/SubscriptionHistory.vue';
 import CreateCategory from '@/views/Categories/CreateCategory.vue';
 import UpdateCategory from '@/views/Categories/UpdateCategory.vue';
 import StaffUsers from '@/views/Settings/StaffUsers.vue';
 import EditUser from '@/views/Settings/StaffUsers/EditUser.vue';
 import SiteSettings from '@/views/Settings/SiteSettings.vue';
+import SubscriptionPlan from '../views/Settings/SubscriptionPlan.vue';
+import UpdateSubscriptionPlan from '../views/Settings/SubscriptionPlan/UpdateSubscriptionPlan.vue';
+import CreateSubscriptionPlan from '../views/Settings/SubscriptionPlan/CreateSubscriptionPlan.vue';
+import PromoCodes from '../views/Settings/PromoCodes.vue';
+import UpdatePromoCode from '../views/Settings/PromoCodes/UpdatePromoCode.vue';
+import CreatePromoCode from '../views/Settings/PromoCodes/CreatePromoCode.vue';
+
 
 const routes = [
   {
@@ -48,12 +55,66 @@ const routes = [
     component: Settings,
   },
   {
+    path: '/settings/promo-codes',
+    name: 'PromoCodesPage',
+    component: PromoCodes,
+    meta: {
+      path: 'settings',
+      subPath: 'promo-codes',
+    },
+  },
+  {
+    path: '/settings/promo-codes/:id',
+    name: 'PromoCodesPageCreate',
+    component: CreatePromoCode,
+    meta: {
+      path: 'settings',
+      subPath: 'promo-codes',
+    },
+  },
+  {
+    path: '/settings/promo-codes/update/:id',
+    name: 'PromoCodesPageUpdate',
+    component: UpdatePromoCode,
+    meta: {
+      path: 'settings',
+      subPath: 'promo-codes',
+    },
+  },
+  {
     path: '/settings/subscription-history',
     name: 'SubscriptionHistoryPage',
     component: SubscriptionHistory,
     meta: {
       path: 'settings',
       subPath: 'subscription-history',
+    },
+  },
+  {
+    path: '/settings/subscription-plans',
+    name: 'SubscriptionPlansPage',
+    component: SubscriptionPlan,
+    meta: {
+      path: 'settings',
+      subPath: 'Subscription Plans',
+    },
+  },
+  {
+    path: '/settings/subscription-plans/create-subscription-plan',
+    name: 'CreateSubscriptionPlansPage',
+    component: CreateSubscriptionPlan,
+    meta: {
+      path: 'settings',
+      subPath: 'Subscription Plans',
+    },
+  },
+  {
+    path: '/settings/subscription-plans/update/:id',
+    name: 'UpdateSubscriptionPlansPage',
+    component: UpdateSubscriptionPlan,
+    meta: {
+      path: 'settings',
+      subPath: 'Subscription Plans',
     },
   },
   {
@@ -65,6 +126,7 @@ const routes = [
       subPath: 'site settings',
     },
   },
+
   {
     path: '/settings/staff-users',
     name: 'StaffUsersPage',

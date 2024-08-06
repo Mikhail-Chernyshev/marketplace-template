@@ -21,10 +21,41 @@
         <td class="table_body_item">
           <div class="table_body_item_buttons">
             <ModalData
+              v-if="isEditNameCity && cityId === item.id"
+              :title="'Update city'"
+              @closeModal="closeModal"
+
+            >
+              <template #modal-input>
+                <div class="category__item">
+                  <label class="category__item-label">Name *</label>
+                  <input
+                    class="category__item-input category__item-input_borderLeft"
+                    v-model="item.name"
+                    type="text"
+                    placeholder="Enter city name"
+                  />
+                </div>
+              </template>
+              <template #modal-buttons>
+                <button
+                  type="button"
+                  class="modal-confirm"
+                  aria-label="Close"
+                  @click="updateCityName(item.id, item.name)"
+                >
+                  Save
+                </button>
+              </template>
+            </ModalData>
+            <div class="table_body_item_edit" @click="handleEdit(item)">
+              <RiPencilFill size="20" />
+            </div>
+            <ModalData
               v-if="isOpenDeleteCity && cityId === item.id"
               :title="'Confirm'"
               :text="'Are you sure to confirm?'"
-            >
+]            >
               <template #modal-buttons>
                 <button
                   type="button"
@@ -56,7 +87,7 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import { RiDeleteBinLine } from '@remixicon/vue';
+import { RiDeleteBinLine, RiPencilFill } from '@remixicon/vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
 import ModalData from '../components/ModalData.vue';
 
@@ -66,12 +97,14 @@ export default {
     RiDeleteBinLine,
     TableForDataPage,
     ModalData,
+    RiPencilFill,
   },
   setup() {
     const fetchData = ref([]);
     const nameAscending = ref(true);
     const isOpenDeleteCity = ref(false);
     const cityId = ref(null);
+    const isEditNameCity = ref(false);
 
     const fetchCitiesData = async () => {
       try {
@@ -103,6 +136,28 @@ export default {
       }
     };
 
+    const fetchUpdateNameCity = async (id, newName) => {
+      try {
+        const body = { id: id, name: newName };
+        const response = await fetch(
+          `${process.env.VUE_APP_BASE_URL}/admin/cities`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+          }
+        );
+        if (!response.ok) {
+          throw new Error('Ошибка: ' + response.statusText);
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+        throw error;
+      }
+    };
+
     onMounted(() => {
       fetchCitiesData();
     });
@@ -121,6 +176,11 @@ export default {
       cityId.value = item.id;
     };
 
+    const handleEdit = (item) => {
+      isEditNameCity.value = true;
+      cityId.value = item.id;
+    };
+
     const closeModal = () => {
       isOpenDeleteCity.value = false;
       cityId.value = null;
@@ -136,6 +196,18 @@ export default {
         });
     };
 
+    const updateCityName = (id, name) => {
+      fetchUpdateNameCity(id, name)
+        .then(() => {
+          closeModal();
+        })
+        .catch((error) => {
+          console.error('Не удалось удалить город:', error);
+        });
+    };
+
+    updateCityName;
+
     return {
       fetchData,
       nameAscending,
@@ -146,6 +218,9 @@ export default {
       closeModal,
       fetchDeleteCity,
       deleteCity,
+      isEditNameCity,
+      handleEdit,
+      updateCityName,
     };
   },
 };
@@ -176,7 +251,18 @@ export default {
       display: flex;
       gap: 10px;
     }
-
+    &_edit {
+      width: 45px !important;
+      background-color: #c9c9c9;
+      border-radius: 8px;
+      text-align: center;
+      height: 21px !important;
+      padding: 6px 0;
+      cursor: pointer;
+    }
+    &_edit > a {
+      color: black;
+    }
     &_delete {
       width: 45px !important;
       background-color: #d50002;
@@ -191,6 +277,65 @@ export default {
       :hover {
         cursor: pointer;
       }
+    }
+  }
+}
+.category {
+  &__item {
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px 16px 16px;
+    margin-top: -16px;
+    &-button-upload {
+      width: 120px;
+      height: 120px;
+      background-color: #ffffff;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.175);
+      &:hover {
+        cursor: pointer;
+      }
+      &-input {
+        width: 0;
+        height: 0;
+      }
+    }
+    &-label {
+      font-size: 16px;
+      font-weight: 800;
+      margin: 0 0 8px 0;
+      &_checkbox {
+        margin-bottom: 0;
+      }
+    }
+    &-field {
+      width: 100%;
+      display: flex;
+    }
+    &-input {
+      height: 42px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      flex: 1 1 auto;
+      font-size: 16px;
+      color: black;
+    }
+    &-checkbox {
+      height: 20px;
+      margin: 0;
+      margin-right: 12px;
+    }
+    &-lang {
+      line-height: 42px;
+      padding: 4px 12px;
+      border-radius: 0 4px 4px 0;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      font-size: 16px;
+      color: black;
+      width: 32px;
     }
   }
 }

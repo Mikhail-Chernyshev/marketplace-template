@@ -33,12 +33,33 @@
                 <RiPencilFill size="20" />
               </router-link>
             </div>
-            <button
-              :disabled="false"
-              class="table_body_item_delete"
-              @click="showConfirmDialog"
+
+            <ModalData
+              v-if="isOpenDeleteCategory && categoryId === item.id"
+              :title="'Confirm'"
+              :text="'Are you sure to confirm?'"
             >
-              <RiDeleteBinLine size="20" />
+              <template #modal-buttons>
+                <button
+                  type="button"
+                  class="modal-close"
+                  aria-label="Close"
+                  @click="closeModal()"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  class="modal-confirm"
+                  aria-label="Close"
+                  @click="deleteCategory()"
+                >
+                  Proceed
+                </button>
+              </template>
+            </ModalData>
+            <button class="table_body_item_delete" @click="handleDelete(item)">
+              <RiDeleteBinLine :size="20" />
             </button>
           </div>
         </td>
@@ -52,12 +73,15 @@ import { ref, onMounted } from 'vue';
 import { formatTimestamp } from '../common/utils.js';
 import { RiDeleteBinLine, RiPencilFill } from '@remixicon/vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
+import ModalData from '../components/ModalData.vue';
 
 export default {
   name: 'CategoriesPage',
-  components: { RiDeleteBinLine, RiPencilFill, TableForDataPage },
+  components: { RiDeleteBinLine, RiPencilFill, TableForDataPage, ModalData },
   setup() {
     const fetchData = ref(null);
+    const isOpenDeleteCategory = ref(false);
+    const categoryId = ref(0);
 
     const fetchCategoriesData = async () => {
       try {
@@ -72,7 +96,40 @@ export default {
         console.error('Ошибка при загрузке данных:', error);
       }
     };
+    const fetchDeleteCategory = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.VUE_APP_BASE_URL}/admin/categories/${categoryId.value}`,
+          { method: 'DELETE' }
+        );
+        if (!response.ok) {
+          throw new Error('Ошибка: ' + response.statusText);
+        }
+        fetchCategoriesData();
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+        throw error;
+      }
+    };
+    const handleDelete = (item) => {
+      isOpenDeleteCategory.value = true;
+      categoryId.value = item.id;
+    };
 
+    const closeModal = () => {
+      isOpenDeleteCategory.value = false;
+      categoryId.value = null;
+    };
+
+    const deleteCategory = () => {
+      fetchDeleteCategory()
+        .then(() => {
+          closeModal();
+        })
+        .catch((error) => {
+          console.error('Не удалось удалить категорию:', error);
+        });
+    };
     onMounted(() => {
       fetchCategoriesData();
     });
@@ -80,6 +137,11 @@ export default {
     return {
       fetchData,
       formatTimestamp,
+      handleDelete,
+      closeModal,
+      isOpenDeleteCategory,
+      categoryId,
+      deleteCategory,
     };
   },
 };
@@ -146,7 +208,33 @@ export default {
       text-align: center;
       height: 33px !important;
       border: none;
+      cursor: pointer;
     }
+  }
+}
+.modal-close {
+  appearance: none;
+  font-size: 16px;
+  padding: 6px 12px;
+  border: none;
+  background-color: #c9c9c9;
+  border-radius: 6px;
+  height: 38px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.modal-confirm {
+  appearance: none;
+  font-size: 16px;
+  padding: 6px 12px;
+  border: none;
+  color: white;
+  background-color: #e15b51;
+  border-radius: 6px;
+  height: 38px;
+  &:hover {
+    cursor: pointer;
   }
 }
 </style>

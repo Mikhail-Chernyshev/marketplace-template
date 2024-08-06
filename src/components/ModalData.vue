@@ -1,21 +1,15 @@
 <template>
-  <div class="modal__overlay">
+  <div @click="handleCloseModal($event)" class="modal__overlay">
     <div class="modal">
       <div class="modal-header">
         <h4 class="modal-title">{{ title }}</h4>
       </div>
       <SubscriptionTransactionDetail v-if="item" :subscription="item" />
       <div class="modal-body">{{ text }}</div>
+      <slot name="modal-input"></slot>
+
       <div class="modal-footer">
         <slot name="modal-buttons"></slot>
-        <!-- <button
-          type="button"
-          class="modal-close"
-          aria-label="Close"
-          @click="closeModal()"
-        >
-          Close
-        </button> -->
       </div>
     </div>
   </div>
@@ -35,16 +29,20 @@ export default {
     item: {
       type: Object,
     },
-    closeModal: {
-      type: Function,
-      required: true,
-    },
     text: {
       type: String,
     },
   },
-  setup() {
-    return {};
+  setup(props, { emit }) {
+    const handleCloseModal = (event) => {
+      if (event.target.className !== 'modal__overlay') {
+        event.stopPropagation();
+      } else {
+        console.log(event.target.className);
+        emit('closeModal');
+      }
+    };
+    return { handleCloseModal };
   },
 };
 </script>

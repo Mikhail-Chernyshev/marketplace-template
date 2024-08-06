@@ -1,6 +1,7 @@
 <template>
   <div class="datePicker">
     <input
+      :disabled="disabledInput"
       class="datePicker__input"
       ref="datepickerInput"
       type="text"
@@ -8,6 +9,7 @@
       @input="updateDate"
       placeholder="By date range"
     />
+    <!-- {{ formattedDate }} -->
     <span class="datePicker__icon">
       <RiCalendarLine :size="20" />
     </span>
@@ -31,8 +33,11 @@ export default {
     selectedDates: {
       type: Array,
     },
+    oneDate: { type: Boolean },
+    disabled: { type: Boolean },
   },
   setup(props, { emit }) {
+    const disabledInput = ref(props.disabled);
     const formattedDate = ref(props.modelValue);
     const datepicker = ref(null);
     const datepickerInput = ref(null);
@@ -51,15 +56,19 @@ export default {
 
     onMounted(() => {
       datepicker.value = flatpickr(datepickerInput.value, {
-        mode: 'range',
+        mode: props.oneDate ? 'single' : 'range',
         dateFormat: 'Y-m-d',
         onChange: (dates) => {
-          if (dates.length === 2) {
+          console.log(58, dates);
+          if (dates.length === 1 && props.oneDate) {
+            formattedDate.value = formatDateString(dates[0]);
+          }
+          if (dates.length === 2 && !props.oneDate) {
             const [startDate, endDate] = dates.map(formatDateString);
             selectedDates.value[0] = startDate;
             selectedDates.value[1] = endDate;
             formattedDate.value = `${startDate} to ${endDate}`;
-          } else if (dates.length === 0) {
+          } else if (dates.length === 0 && !props.oneDate) {
             delete selectedDates.value[0];
             delete selectedDates.value[1];
             formattedDate.value = '';
@@ -78,6 +87,7 @@ export default {
     return {
       formattedDate,
       datepickerInput,
+      disabledInput,
     };
   },
 };
