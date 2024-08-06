@@ -52,7 +52,7 @@
             </td>
             <td class="table_body_item">
               <span>{{ item.subTotalPrice }}</span>
-              <span v-if="item.promoCode" class="text-muted">
+              <span v-if="item.promoCode">
                 (-{{ item.discount }})
               </span>
             </td>
@@ -102,9 +102,11 @@ export default {
         console.error('Ошибка при загрузке данных:', error);
       }
     };
+
     onMounted(() => {
       fetchDashboardData();
     });
+    
     return {
       fetchData,
       formatTimestamp,

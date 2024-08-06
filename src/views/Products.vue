@@ -9,15 +9,7 @@
         placeholder="Search..."
         v-model="searchQuery"
       />
-      <div
-        :style="{
-          display: 'flex',
-          alignItems: 'center',
-          marginRight: '12px',
-          fontWeight: '600',
-        }"
-        class="cities__header_checkboxs"
-      >
+      <div class="cities__header_checkbox-container">
         <input
           id="featuredCheck"
           class="cities__header_checkbox"
@@ -26,10 +18,7 @@
         />
         <label for="featuredCheck"> Featured </label>
       </div>
-      <div
-        :style="{ display: 'flex', alignItems: 'center', fontWeight: '600' }"
-        class="form-check"
-      >
+      <div class="cities__header_checkbox-container">
         <input
           id="discountCheck"
           class="cities__header_checkbox"
@@ -41,14 +30,7 @@
     </div>
     <TableForDataPage
       :items="fetchData?.contents"
-      :headers="[
-        { label: 'IMAGE', key: 'image', minWidth: 100 },
-        { label: 'NAME', key: 'name', minWidth: 250 },
-        { label: 'PRICE', key: 'price', minWidth: 150 },
-        { label: 'CATEGORY', key: 'category', minWidth: 100 },
-        { label: 'DISCOUNT', key: 'discount', minWidth: 100 },
-        { label: 'FEATURED', key: 'featured', minWidth: 100 },
-      ]"
+      :headers="tableHeaders"
       emptyMessage="No products"
     >
       <template #row="{ item }">
@@ -61,9 +43,8 @@
         </td>
         <td class="table_body_item">
           <RouterLink
-            :style="{ color: 'black', fontWeight: '900' }"
+            class="table_body_item-link"
             :to="`/products/${item.slug}`"
-            class="text-dark"
           >
             {{ item.name }}
           </RouterLink>
@@ -83,7 +64,6 @@
         </td>
         <td class="table_body_item">
           <input
-            class="table_body_item_switch"
             type="checkbox"
             role="switch"
             :checked="item.featured"
@@ -100,7 +80,7 @@ import { ref, onMounted, watch } from 'vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
 
 export default {
-  name: 'CitiesPage',
+  name: 'ProductsPage',
   components: { TableForDataPage },
   setup() {
     const fetchData = ref([]);
@@ -109,18 +89,23 @@ export default {
       featured: false,
       discount: false,
     });
+    const tableHeaders = [
+      { label: 'IMAGE', key: 'image', minWidth: 100 },
+      { label: 'NAME', key: 'name', minWidth: 250 },
+      { label: 'PRICE', key: 'price', minWidth: 150 },
+      { label: 'CATEGORY', key: 'category', minWidth: 100 },
+      { label: 'DISCOUNT', key: 'discount', minWidth: 100 },
+      { label: 'FEATURED', key: 'featured', minWidth: 100 },
+    ];
 
     const handleChangeFeatured = (id, featured) => {
-      if (!featured) {
-        updateFeatureStatus(id, 'make-featured');
-      } else {
-        updateFeatureStatus(id, 'remove-featured');
-      }
+      const action = featured ? 'remove-featured' : 'make-featured';
+      updateFeatureStatus(id, action);
     };
 
     const fetchProductsData = async () => {
       let url = `${process.env.VUE_APP_BASE_URL}/admin/products`;
-      console.log(searchQuery, query.value.featured, query.value.discount);
+
       if (searchQuery.value !== '') {
         url += `?q=${searchQuery.value}`;
       }
@@ -178,6 +163,7 @@ export default {
       searchQuery,
       query,
       handleChangeFeatured,
+      tableHeaders,
     };
   },
 };
@@ -210,6 +196,12 @@ export default {
         outline: none;
       }
     }
+    &_checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-right: 12px;
+      font-weight: 600;
+    }
     &_checkbox {
       width: 16px;
       height: 16px;
@@ -233,6 +225,10 @@ export default {
       border-radius: 6px;
       padding: 0;
       margin: 0;
+    }
+    &-link {
+      color: black;
+      font-weight: 900;
     }
   }
 }
