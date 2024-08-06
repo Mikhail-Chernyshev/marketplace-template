@@ -12,11 +12,7 @@
 
     <TableForDataPage
       :items="fetchData"
-      :headers="[
-        { label: 'NAME', minWidth: 400 },
-        { label: 'CREATED AT', minWidth: 250, width: 250 },
-        { label: 'ACTION', minWidth: 200, width: 200 },
-      ]"
+      :headers="tableHeaders"
       emptyMessage="No categories found"
     >
       <template #row="{ item }">
@@ -37,22 +33,17 @@
             <ModalData
               v-if="isOpenDeleteCategory && categoryId === item.id"
               :title="'Confirm'"
-              :text="'Are you sure to confirm?'"
+              :text="'Are you sure to delete?'"
+              @closeModal="closeModal"
             >
               <template #modal-buttons>
-                <button
-                  type="button"
-                  class="modal-close"
-                  aria-label="Close"
-                  @click="closeModal()"
-                >
+                <button type="button" class="modal-close" @click="closeModal()">
                   Cancel
                 </button>
                 <button
                   type="button"
                   class="modal-confirm"
-                  aria-label="Close"
-                  @click="deleteCategory()"
+                  @click="confirmDeleteCategory()"
                 >
                   Proceed
                 </button>
@@ -82,6 +73,11 @@ export default {
     const fetchData = ref(null);
     const isOpenDeleteCategory = ref(false);
     const categoryId = ref(0);
+    const tableHeaders = [
+      { label: 'NAME', minWidth: 400 },
+      { label: 'CREATED AT', minWidth: 250, width: 250 },
+      { label: 'ACTION', minWidth: 200, width: 200 },
+    ];
 
     const fetchCategoriesData = async () => {
       try {
@@ -96,6 +92,7 @@ export default {
         console.error('Ошибка при загрузке данных:', error);
       }
     };
+
     const fetchDeleteCategory = async () => {
       try {
         const response = await fetch(
@@ -105,12 +102,14 @@ export default {
         if (!response.ok) {
           throw new Error('Ошибка: ' + response.statusText);
         }
-        fetchCategoriesData();
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         throw error;
+      } finally {
+        fetchCategoriesData();
       }
     };
+
     const handleDelete = (item) => {
       isOpenDeleteCategory.value = true;
       categoryId.value = item.id;
@@ -121,7 +120,7 @@ export default {
       categoryId.value = null;
     };
 
-    const deleteCategory = () => {
+    const confirmDeleteCategory = () => {
       fetchDeleteCategory()
         .then(() => {
           closeModal();
@@ -130,6 +129,7 @@ export default {
           console.error('Не удалось удалить категорию:', error);
         });
     };
+
     onMounted(() => {
       fetchCategoriesData();
     });
@@ -141,7 +141,8 @@ export default {
       closeModal,
       isOpenDeleteCategory,
       categoryId,
-      deleteCategory,
+      confirmDeleteCategory,
+      tableHeaders,
     };
   },
 };

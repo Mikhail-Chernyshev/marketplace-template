@@ -174,7 +174,7 @@ export default {
         )?.name;
         slug.value = result?.slug;
         featured.value = result?.featured;
-        category.value = result?.category.id;
+        category.value = result?.category?.id;
         image.value = result?.image.replace('localhost', '192.168.0.177:8180');
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);

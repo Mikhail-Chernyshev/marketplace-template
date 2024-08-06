@@ -2,14 +2,50 @@
   <div class="cities">
     <div class="cities__header">
       <h2 class="cities__header_title">Cities</h2>
+      <ModalData
+        v-if="isOpenCreateCity"
+        :title="'Add city'"
+        @closeModal="closeModal"
+      >
+        <template #modal-input>
+          <div class="modal__item">
+            <label class="modal__item-label">Name *</label>
+            <input
+              class="modal__item-input"
+              v-model="newCity"
+              type="text"
+              placeholder="Enter city name"
+            />
+          </div>
+        </template>
+        <template #modal-buttons>
+          <button
+            type="button"
+            class="modal-close"
+            aria-label="Close"
+            @click="closeModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="modal-confirm"
+            aria-label="Close"
+            @click="createCity()"
+          >
+            Proceed
+          </button>
+        </template>
+      </ModalData>
+
+      <button class="cities__header_button" @click="openCreateModal()">
+        Add new
+      </button>
     </div>
 
     <TableForDataPage
       :items="fetchData"
-      :headers="[
-        { label: 'NAME', key: 'name', sortable: true, minWidth: 400 },
-        { label: 'ACTION', key: 'action', minWIdth: 200 },
-      ]"
+      :headers="tableHeaders"
       emptyMessage="No cities found"
       @sort="filterData"
     >
@@ -24,13 +60,12 @@
               v-if="isEditNameCity && cityId === item.id"
               :title="'Update city'"
               @closeModal="closeModal"
-
             >
               <template #modal-input>
-                <div class="category__item">
-                  <label class="category__item-label">Name *</label>
+                <div class="modal__item">
+                  <label class="modal__item-label">Name *</label>
                   <input
-                    class="category__item-input category__item-input_borderLeft"
+                    class="modal__item-input"
                     v-model="item.name"
                     type="text"
                     placeholder="Enter city name"
@@ -42,20 +77,21 @@
                   type="button"
                   class="modal-confirm"
                   aria-label="Close"
-                  @click="updateCityName(item.id, item.name)"
+                  @click="updateCity(item.id, item.name)"
                 >
                   Save
                 </button>
               </template>
             </ModalData>
-            <div class="table_body_item_edit" @click="handleEdit(item)">
+            <div class="table_body_item_edit" @click="openEditModal(item)">
               <RiPencilFill size="20" />
             </div>
             <ModalData
               v-if="isOpenDeleteCity && cityId === item.id"
               :title="'Confirm'"
-              :text="'Are you sure to confirm?'"
-]            >
+              :text="'Are you sure to delete?'"
+              @closeModal="closeModal"
+            >
               <template #modal-buttons>
                 <button
                   type="button"
@@ -75,7 +111,7 @@
                 </button>
               </template>
             </ModalData>
-            <button class="table_body_item_delete" @click="handleDelete(item)">
+            <button class="table_body_item_delete" @click="openDeleteModal(item)">
               <RiDeleteBinLine :size="20" />
             </button>
           </div>
@@ -103,8 +139,18 @@ export default {
     const fetchData = ref([]);
     const nameAscending = ref(true);
     const isOpenDeleteCity = ref(false);
+    const isOpenCreateCity = ref(false);
     const cityId = ref(null);
     const isEditNameCity = ref(false);
+    const newCity = ref('');
+    const tableHeaders = [
+      { label: 'NAME', key: 'name', sortable: true, minWidth: 400 },
+      { label: 'ACTION', key: 'action', minWIdth: 200 },
+    ];
+
+    onMounted(() => {
+      fetchCitiesData();
+    });
 
     const fetchCitiesData = async () => {
       try {
@@ -121,46 +167,40 @@ export default {
       }
     };
 
-    const fetchDeleteCity = async () => {
+    const fetchCityAction = async (url, method, body) => {
       try {
-        const response = await fetch(
-          `${process.env.VUE_APP_BASE_URL}/admin/cities/${cityId.value}`,
-          { method: 'DELETE' }
-        );
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
+        const response = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        if (!response.ok) throw new Error('Error: ' + response.statusText);
+        fetchCitiesData();
+        closeModal();
       } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
-        throw error;
+        console.error('Error with city action:', error);
       }
     };
 
-    const fetchUpdateNameCity = async (id, newName) => {
-      try {
-        const body = { id: id, name: newName };
-        const response = await fetch(
-          `${process.env.VUE_APP_BASE_URL}/admin/cities`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-          }
-        );
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-      } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
-        throw error;
-      }
+    const createCity = () => {
+      fetchCityAction(`${process.env.VUE_APP_BASE_URL}/admin/cities`, 'POST', {
+        name: newCity.value,
+      });
     };
 
-    onMounted(() => {
-      fetchCitiesData();
-    });
+    const updateCity = (id, name) => {
+      fetchCityAction(`${process.env.VUE_APP_BASE_URL}/admin/cities`, 'PUT', {
+        id,
+        name,
+      });
+    };
+
+    const deleteCity = () => {
+      fetchCityAction(
+        `${process.env.VUE_APP_BASE_URL}/admin/cities/${cityId.value}`,
+        'DELETE'
+      );
+    };
 
     const filterData = (key, ascending) => {
       nameAscending.value = ascending;
@@ -171,56 +211,45 @@ export default {
       });
     };
 
-    const handleDelete = (item) => {
+    const openDeleteModal = (item) => {
       isOpenDeleteCity.value = true;
       cityId.value = item.id;
     };
 
-    const handleEdit = (item) => {
+    const openCreateModal = () => {
+      isOpenCreateCity.value = true;
+    };
+
+    const openEditModal = (item) => {
       isEditNameCity.value = true;
       cityId.value = item.id;
     };
 
     const closeModal = () => {
       isOpenDeleteCity.value = false;
+      isEditNameCity.value = false;
+      isOpenCreateCity.value = false;
       cityId.value = null;
+      newCity.value = '';
     };
-
-    const deleteCity = () => {
-      fetchDeleteCity()
-        .then(() => {
-          closeModal();
-        })
-        .catch((error) => {
-          console.error('Не удалось удалить город:', error);
-        });
-    };
-
-    const updateCityName = (id, name) => {
-      fetchUpdateNameCity(id, name)
-        .then(() => {
-          closeModal();
-        })
-        .catch((error) => {
-          console.error('Не удалось удалить город:', error);
-        });
-    };
-
-    updateCityName;
 
     return {
       fetchData,
       nameAscending,
       filterData,
-      handleDelete,
+      openDeleteModal,
       isOpenDeleteCity,
       cityId,
       closeModal,
-      fetchDeleteCity,
       deleteCity,
+      createCity,
       isEditNameCity,
-      handleEdit,
-      updateCityName,
+      openEditModal,
+      updateCity,
+      isOpenCreateCity,
+      openCreateModal,
+      newCity,
+      tableHeaders,
     };
   },
 };
@@ -237,6 +266,24 @@ export default {
       font-size: 32px;
       margin: -3px 0 0 0;
       height: 38px;
+    }
+    &_button {
+      color: #ffffff;
+      border-radius: 6px;
+      width: 92px;
+      height: 38px;
+      background-color: #e15b51;
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 37px;
+      appearance: none;
+      text-decoration: none;
+      border: none;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }
@@ -280,26 +327,38 @@ export default {
     }
   }
 }
-.category {
+.modal {
+  &-close {
+    appearance: none;
+    font-size: 16px;
+    padding: 6px 12px;
+    border: none;
+    background-color: #c9c9c9;
+    border-radius: 6px;
+    height: 38px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  &-confirm {
+    appearance: none;
+    font-size: 16px;
+    padding: 6px 12px;
+    border: none;
+    color: white;
+    background-color: #e15b51;
+    border-radius: 6px;
+    height: 38px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
   &__item {
     display: flex;
     flex-direction: column;
     padding: 0 16px 16px 16px;
     margin-top: -16px;
-    &-button-upload {
-      width: 120px;
-      height: 120px;
-      background-color: #ffffff;
-      border-radius: 4px;
-      border: 1px solid rgba(0, 0, 0, 0.175);
-      &:hover {
-        cursor: pointer;
-      }
-      &-input {
-        width: 0;
-        height: 0;
-      }
-    }
+
     &-label {
       font-size: 16px;
       font-weight: 800;
@@ -308,10 +367,7 @@ export default {
         margin-bottom: 0;
       }
     }
-    &-field {
-      width: 100%;
-      display: flex;
-    }
+
     &-input {
       height: 42px;
       padding: 4px 12px;
@@ -322,46 +378,6 @@ export default {
       font-size: 16px;
       color: black;
     }
-    &-checkbox {
-      height: 20px;
-      margin: 0;
-      margin-right: 12px;
-    }
-    &-lang {
-      line-height: 42px;
-      padding: 4px 12px;
-      border-radius: 0 4px 4px 0;
-      background-color: #f9fafb;
-      border: 1px solid #e5e7eb;
-      font-size: 16px;
-      color: black;
-      width: 32px;
-    }
-  }
-}
-.modal-close {
-  appearance: none;
-  font-size: 16px;
-  padding: 6px 12px;
-  border: none;
-  background-color: #c9c9c9;
-  border-radius: 6px;
-  height: 38px;
-  &:hover {
-    cursor: pointer;
-  }
-}
-.modal-confirm {
-  appearance: none;
-  font-size: 16px;
-  padding: 6px 12px;
-  border: none;
-  color: white;
-  background-color: #e15b51;
-  border-radius: 6px;
-  height: 38px;
-  &:hover {
-    cursor: pointer;
   }
 }
 </style>
