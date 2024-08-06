@@ -11,6 +11,7 @@ import CreateCategory from '@/views/Categories/CreateCategory.vue';
 import UpdateCategory from '@/views/Categories/UpdateCategory.vue';
 import StaffUsers from '@/views/Settings/StaffUsers.vue';
 import EditUser from '@/views/Settings/StaffUsers/EditUser.vue';
+import SiteSettings from '@/views/Settings/SiteSettings.vue';
 
 const routes = [
   {
@@ -53,6 +54,15 @@ const routes = [
     meta: {
       path: 'settings',
       subPath: 'subscription-history',
+    },
+  },
+  {
+    path: '/settings/site-setting',
+    name: 'SiteSettingsPage',
+    component: SiteSettings,
+    meta: {
+      path: 'settings',
+      subPath: 'site settings',
     },
   },
   {

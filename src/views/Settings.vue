@@ -18,6 +18,7 @@
           </template>
         </SettingsItem>
         <SettingsItem
+        path="site-setting"
           title="Site Settings"
           subtitle="Manage site settings"
           bgColor="#C9C9C9"
