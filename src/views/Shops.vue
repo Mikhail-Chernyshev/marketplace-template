@@ -73,7 +73,7 @@
         <td class="table_body_item">
           <div class="table_body_item_buttons">
             <div class="table_body_item_edit">
-              <router-link :to="`/admin/shops/${item.id}`">
+              <router-link :to="`/shops/${item.id}`">
                 <RiPencilFill size="20" />
               </router-link>
             </div>

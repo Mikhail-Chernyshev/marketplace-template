@@ -157,9 +157,7 @@ export default {
     };
 
     const fetchCategoryData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/categories/${
-        props.id ? props.id : 0
-      }`;
+      let url = `${process.env.VUE_APP_BASE_URL}/admin/categories/${props.id}`;
       try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -219,7 +217,8 @@ export default {
           body: data,
         });
         if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
+          const responseBody = await response.text();
+          throw new Error('Ошибка: ' + responseBody);
         }
         if (!props.update) {
           router.push('/categories');
@@ -230,7 +229,9 @@ export default {
     };
 
     onMounted(() => {
-      fetchCategoryData();
+      if (props.id) {
+        fetchCategoryData();
+      }
       if (props.update) {
         fetchCategoriesData('content');
       } else {

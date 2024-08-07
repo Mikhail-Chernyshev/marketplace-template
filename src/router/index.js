@@ -18,7 +18,7 @@ import CreateSubscriptionPlan from '../views/Settings/SubscriptionPlan/CreateSub
 import PromoCodes from '../views/Settings/PromoCodes.vue';
 import UpdatePromoCode from '../views/Settings/PromoCodes/UpdatePromoCode.vue';
 import CreatePromoCode from '../views/Settings/PromoCodes/CreatePromoCode.vue';
-
+import Shop from '@/views/Shops/Shop.vue';
 
 const routes = [
   {
@@ -154,6 +154,15 @@ const routes = [
     path: '/shops',
     name: 'ShopsPage',
     component: Shops,
+  },
+  {
+    path: '/shops/:id',
+    name: 'ShopPage',
+    component: Shop,
+    meta: {
+      path: 'dashboard',
+      subPath: 'shops',
+    },
   },
   {
     path: '/products',
