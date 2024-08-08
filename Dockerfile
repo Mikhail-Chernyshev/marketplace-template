@@ -1,7 +1,7 @@
-FROM node:16
+FROM node:20
 COPY ./ /app
 WORKDIR /app
-RUN npm install && npm run serve
+RUN npm install && npm run build
 
 FROM nginx
 RUN mkdir /app
