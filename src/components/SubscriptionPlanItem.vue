@@ -1,6 +1,6 @@
 <template>
   <div class="subscriptionPlan">
-    <div v-if="idPlan" class="subscriptionPlan__items">
+    <div v-if="fetchData" class="subscriptionPlan__items">
       <div class="subscriptionPlan__items_x-wrapper">
         <div class="subscriptionPlan__item">
           <label class="subscriptionPlan__item-label">Title *</label>
@@ -130,6 +130,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { subscriptionPlans } from '../api/settings/subscriptionPlans/subscriptionPlans';
 
 export default {
   name: 'subscriptionPlanItem',
@@ -150,13 +151,9 @@ export default {
     ];
 
     const fetchsubscriptionPlanData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/subscription-plans/${props?.id}`;
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        console.log(subscriptionPlans[idPlan]);
+        fetchData.value = subscriptionPlans[Number(idPlan.value)];
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
       }

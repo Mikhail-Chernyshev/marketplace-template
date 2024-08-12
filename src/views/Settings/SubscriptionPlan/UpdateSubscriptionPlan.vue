@@ -4,8 +4,8 @@
       <h2 class="updateCategory__header_title">Update Subscription Plan</h2>
       <h3 class="updateCategory__header_route">
         <router-link :to="'/settings'">
-          {{ capitalizeFirstLetter($route.meta.path) }}
-        </router-link>{{ ' / ' }}
+          {{ capitalizeFirstLetter($route.meta.path) }} </router-link
+        >{{ ' / ' }}
         <router-link :to="'/settings'">
           {{ capitalizeFirstLetter($route.meta.subPath) }}
         </router-link>

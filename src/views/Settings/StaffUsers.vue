@@ -75,6 +75,7 @@ import TableForDataPage from '@/components/TableForDataPage.vue';
 import { formatTimestamp } from '../../common/utils.js';
 import { RiDeleteBinLine, RiPencilFill } from '@remixicon/vue';
 import ModalData from '../../components/ModalData.vue';
+import { usersStaff } from '../../api/settings/users/usersStaff';
 
 export default {
   name: 'StaffUsersPage',
@@ -99,15 +100,9 @@ export default {
     const capitalizeFirstLetter = (string) =>
       string.charAt(0).toUpperCase() + string.slice(1);
 
-    const fetchSubscriptionsData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/users?staff-only=true`;
-
+    const fetchUsersData = async () => {
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        fetchData.value = usersStaff;
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         fetchData.value = [];
@@ -122,7 +117,7 @@ export default {
       userId.value = null;
     };
     onMounted(() => {
-      fetchSubscriptionsData();
+      fetchUsersData();
     });
 
     return {

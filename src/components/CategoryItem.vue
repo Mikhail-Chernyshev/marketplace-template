@@ -40,25 +40,7 @@
           />
         </div>
       </div>
-      <div class="category__item">
-        <label class="category__item-label">Parent Category</label>
-        <div class="category__item-field">
-          <select
-            v-if="categories && categories.length > 0"
-            class="category__item-input"
-            v-model="category"
-          >
-            <option v-for="el in categories" :value="el.id" :key="el.name">
-              {{ el.name || 'undefined' }}
-            </option>
-          </select>
-          <select v-else class="category__item-input" v-model="category">
-            <option value="" disabled selected>
-              {{ 'No data' }}
-            </option>
-          </select>
-        </div>
-      </div>
+
       <div class="category__item">
         <div class="category__item-field">
           <input
@@ -118,6 +100,7 @@
 import { ref, onMounted } from 'vue';
 import { RiAddLine } from '@remixicon/vue';
 import { useRouter } from 'vue-router';
+import { categoriesList } from '../api/categories/categories';
 
 export default {
   name: 'CategoryItem',
@@ -133,7 +116,6 @@ export default {
     const nameInEnglish = ref('');
     const nameInLocal = ref('');
     const slug = ref('');
-    const category = ref(null);
     const categories = ref([]);
     const featured = ref(false);
     const fileRef = ref(null);
@@ -157,13 +139,8 @@ export default {
     };
 
     const fetchCategoryData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/categories/${props.id}`;
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        const result = await response.json();
+        const result = categoriesList.find((el) => el.id == props.id);
         nameInEnglish.value = result.names?.find(
           (e) => e.lang.toUpperCase() === 'EN'
         )?.name;
@@ -172,70 +149,51 @@ export default {
         )?.name;
         slug.value = result?.slug;
         featured.value = result?.featured;
-        category.value = result?.category?.id;
-        image.value = result?.image.replace('localhost', '192.168.0.177:8180');
-      } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
-      }
-    };
-
-    const fetchCategoriesData = async (path) => {
-      let url = `${process.env.VUE_APP_BASE_URL}/${path}/categories?root=false`;
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        const result = await response.json();
-        categories.value = result;
+        image.value = result?.image;
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
       }
     };
 
     const createCategory = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/categories`;
-      const data = new FormData();
-      imageFile.value && data.append('file', imageFile.value);
-      const bodyContent = {
-        slug: slug.value,
-        categoryId: category.value,
-        featured: featured.value,
-        names: [
-          { name: nameInEnglish.value, lang: 'en' },
-          { name: nameInLocal.value, lang: 'mm' },
-        ],
-      };
-      props.id ? (bodyContent.id = Number(props.id)) : '';
-      const jsonBlob = new Blob([JSON.stringify(bodyContent)], {
-        type: 'application/json',
-      });
-      data.append('body', jsonBlob);
-      try {
-        const response = await fetch(url, {
-          method: props.update ? 'PUT' : 'POST',
-          body: data,
-        });
-        if (!response.ok) {
-          const responseBody = await response.text();
-          throw new Error('Ошибка: ' + responseBody);
-        }
-        if (!props.update) {
-          router.push('/categories');
-        }
-      } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
-      }
+      alert('Данные отправлены!');
+      router.push('/categories');
+      // let url = `${process.env.VUE_APP_BASE_URL}/admin/categories`;
+      // const data = new FormData();
+      // imageFile.value && data.append('file', imageFile.value);
+      // const bodyContent = {
+      //   slug: slug.value,
+      //   featured: featured.value,
+      //   names: [
+      //     { name: nameInEnglish.value, lang: 'en' },
+      //     { name: nameInLocal.value, lang: 'mm' },
+      //   ],
+      // };
+      // props.id ? (bodyContent.id = Number(props.id)) : '';
+      // const jsonBlob = new Blob([JSON.stringify(bodyContent)], {
+      //   type: 'application/json',
+      // });
+      // data.append('body', jsonBlob);
+      // try {
+      //   const response = await fetch(url, {
+      //     method: props.update ? 'PUT' : 'POST',
+      //     body: data,
+      //   });
+      //   if (!response.ok) {
+      //     const responseBody = await response.text();
+      //     throw new Error('Ошибка: ' + responseBody);
+      //   }
+      //   if (!props.update) {
+      //     router.push('/categories');
+      //   }
+      // } catch (error) {
+      //   console.error('Ошибка при загрузке данных:', error);
+      // }
     };
 
     onMounted(() => {
       if (props.id) {
         fetchCategoryData();
-      }
-      if (props.update) {
-        fetchCategoriesData('content');
-      } else {
-        fetchCategoriesData('admin');
       }
     });
 
@@ -243,7 +201,6 @@ export default {
       nameInEnglish,
       nameInLocal,
       slug,
-      category,
       featured,
       fileRef,
       image,

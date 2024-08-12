@@ -25,6 +25,7 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import UserPermissionsCard from '../../../components/UserPermissionsCard';
+import { user1, user2 } from '../../../api/settings/users/users/users';
 
 export default {
   name: 'EditUserPage',
@@ -41,13 +42,7 @@ export default {
 
     const fetchCategoriesData = async () => {
       try {
-        const response = await fetch(
-          `${process.env.VUE_APP_BASE_URL}/admin/users/${route.params.id}`
-        );
-        if (!response.ok) {
-          throw new Error('Сетевая ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        fetchData.value = route.params.id == 2 ? user2 : user1;
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
       }
@@ -60,9 +55,9 @@ export default {
           {
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json', 
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify(fetchData.value.permissions), 
+            body: JSON.stringify(fetchData.value.permissions),
           }
         );
         if (!response.ok) {

@@ -71,6 +71,7 @@ import { onMounted, ref } from 'vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
 import DashboardCard from '@/components/DashboardCard.vue';
 import { formatTimestamp } from '../common/utils.js';
+import { dashboardJson } from '../api/dashboard/dashboard';
 
 export default {
   name: 'DashboardPage',
@@ -90,13 +91,7 @@ export default {
 
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch(
-          `${process.env.VUE_APP_BASE_URL}/admin/dashboard`
-        );
-        if (!response.ok) {
-          throw new Error('Сетевая ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        fetchData.value = dashboardJson;
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
       }

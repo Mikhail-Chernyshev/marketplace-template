@@ -97,6 +97,7 @@ import TableForDataPage from '@/components/TableForDataPage.vue';
 import { formatTimestamp } from '../../common/utils.js';
 import { RiPencilFill, RiDeleteBinLine } from '@remixicon/vue';
 import ModalData from '../../components/ModalData.vue';
+import { promos } from '../../api/settings/promos/promos';
 
 export default {
   name: 'PromoCodesPage',
@@ -157,18 +158,18 @@ export default {
         });
     };
     const fetchPromoCodesData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/subscription-promos`;
+      // let url = `${process.env.VUE_APP_BASE_URL}/admin/subscription-promos`;
 
-      if (typePromos.value !== ' ') {
-        url += `?${typePromos.value.toLowerCase()}=true`;
-      }
+      // if (typePromos.value !== ' ') {
+      //   url += `?${typePromos.value.toLowerCase()}=true`;
+      // }
 
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        // const response = await fetch(url);
+        // if (!response.ok) {
+        //   throw new Error('Ошибка: ' + response.statusText);
+        // }
+        fetchData.value = promos;
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         fetchData.value = [];

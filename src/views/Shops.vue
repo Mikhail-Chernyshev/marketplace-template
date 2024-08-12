@@ -89,6 +89,7 @@ import { ref, onMounted, watch } from 'vue';
 import { RiPencilFill } from '@remixicon/vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
 import { formatTimestamp } from '../common/utils.js';
+import { shopsList } from '../api/shops/shops';
 
 export default {
   name: 'ShopsPage',
@@ -118,27 +119,27 @@ export default {
 
     const fetchShopsData = async () => {
       try {
-        let response;
-        if (searchQuery.value === '' && status?.value) {
-          response = await fetch(
-            `${process.env.VUE_APP_BASE_URL}/admin/shops?status=${status?.value}`
-          );
-        } else if (searchQuery.value !== '' && status?.value) {
-          response = await fetch(
-            `${process.env.VUE_APP_BASE_URL}/admin/shops?status=${status?.value}&q=${searchQuery.value}`
-          );
-        } else if (searchQuery.value !== '' && !status?.value) {
-          response = await fetch(
-            `${process.env.VUE_APP_BASE_URL}/admin/shops?q=${searchQuery.value}`
-          );
-        } else {
-          response = await fetch(`${process.env.VUE_APP_BASE_URL}/admin/shops`);
-        }
+        // let response;
+        // if (searchQuery.value === '' && status?.value) {
+        //   response = await fetch(
+        //     `${process.env.VUE_APP_BASE_URL}/admin/shops?status=${status?.value}`
+        //   );
+        // } else if (searchQuery.value !== '' && status?.value) {
+        //   response = await fetch(
+        //     `${process.env.VUE_APP_BASE_URL}/admin/shops?status=${status?.value}&q=${searchQuery.value}`
+        //   );
+        // } else if (searchQuery.value !== '' && !status?.value) {
+        //   response = await fetch(
+        //     `${process.env.VUE_APP_BASE_URL}/admin/shops?q=${searchQuery.value}`
+        //   );
+        // } else {
+        //   response = await fetch(`${process.env.VUE_APP_BASE_URL}/admin/shops`);
+        // }
 
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        // if (!response.ok) {
+        //   throw new Error('Ошибка: ' + response.statusText);
+        // }
+        fetchData.value = shopsList;
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         fetchData.value = [];

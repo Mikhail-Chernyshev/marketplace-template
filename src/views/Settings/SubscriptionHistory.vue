@@ -63,11 +63,7 @@
         </td>
         <td class="table_body_item">
           <span>
-            {{
-              item.audit?.createdAt
-                ? formatTimestamp(item.audit?.createdAt)
-                : '--'
-            }}
+            {{ item.audit?.createdAt ? item.audit?.createdAt : '--' }}
           </span>
         </td>
         <td class="table_body_item">
@@ -103,9 +99,9 @@
 import { ref, onMounted, watch } from 'vue';
 import DatePickerInput from '../../components/DatePickerInput.vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
-import { formatTimestamp } from '../../common/utils.js';
 import { RiEyeFill } from '@remixicon/vue';
 import ModalData from '../../components/ModalData.vue';
+import { subscriptionHistory } from '../../api/settings/subscriptionHistory/subscriptionHistory';
 
 export default {
   name: 'SubscriptionHistoryPage',
@@ -145,17 +141,23 @@ export default {
     };
 
     const fetchSubscriptionsData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/shop-subscriptions?time-zone=Europe/Moscow`;
-      url += status.value !== ' ' ? `&status=${status.value}` : '';
-      url += dateValue.value
-        ? `&from-date=${selectedDates.value[0]}&to-date=${selectedDates.value[1]}`
-        : '';
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
+        fetchData.value = { ...subscriptionHistory };
+
+        if (dateValue.value) {
+          const [startDate, endDate] = selectedDates.value.map(
+            (date) => new Date(date)
+          );
+          fetchData.value.contents = fetchData.value.contents.filter((e) => {
+            const createdAt = new Date(e.audit.createdAt);
+            return createdAt > startDate && createdAt < endDate;
+          });
         }
-        fetchData.value = await response.json();
+        if (status.value !== ' ') {
+          fetchData.value.contents = fetchData.value.contents.filter((e) => {
+            return e.status === status.value;
+          });
+        }
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         fetchData.value = [];
@@ -170,7 +172,6 @@ export default {
     return {
       fetchData,
       status,
-      formatTimestamp,
       selectedDates,
       dateValue,
       capitalizeFirstLetter,

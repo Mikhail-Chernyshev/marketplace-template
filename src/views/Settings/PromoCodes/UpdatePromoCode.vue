@@ -18,6 +18,7 @@
 
 <script>
 import PromoCodeItem from '../../../components/PromoCodeItem.vue';
+
 export default {
   name: 'UpdatePromoCodePage',
   components: { PromoCodeItem },

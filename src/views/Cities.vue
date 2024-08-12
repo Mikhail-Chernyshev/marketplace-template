@@ -111,7 +111,10 @@
                 </button>
               </template>
             </ModalData>
-            <button class="table_body_item_delete" @click="openDeleteModal(item)">
+            <button
+              class="table_body_item_delete"
+              @click="openDeleteModal(item)"
+            >
               <RiDeleteBinLine :size="20" />
             </button>
           </div>
@@ -126,6 +129,7 @@ import { ref, onMounted } from 'vue';
 import { RiDeleteBinLine, RiPencilFill } from '@remixicon/vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
 import ModalData from '../components/ModalData.vue';
+import { citiesList } from '../api/cities/cities';
 
 export default {
   name: 'CitiesPage',
@@ -154,13 +158,7 @@ export default {
 
     const fetchCitiesData = async () => {
       try {
-        const response = await fetch(
-          `${process.env.VUE_APP_BASE_URL}/admin/cities`
-        );
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        fetchData.value = citiesList;
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         fetchData.value = [];
