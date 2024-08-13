@@ -65,6 +65,7 @@ import { formatTimestamp } from '../common/utils.js';
 import { RiDeleteBinLine, RiPencilFill } from '@remixicon/vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
 import ModalData from '../components/ModalData.vue';
+import { categoriesList } from '../api/categories/categories';
 
 export default {
   name: 'CategoriesPage',
@@ -73,6 +74,7 @@ export default {
     const fetchData = ref(null);
     const isOpenDeleteCategory = ref(false);
     const categoryId = ref(0);
+    const excludeIds = ref([]);
     const tableHeaders = [
       { label: 'NAME', minWidth: 400 },
       { label: 'CREATED AT', minWidth: 250, width: 250 },
@@ -81,38 +83,22 @@ export default {
 
     const fetchCategoriesData = async () => {
       try {
-        const response = await fetch(
-          `${process.env.VUE_APP_BASE_URL}/admin/categories/0/list`
-        );
-        if (!response.ok) {
-          throw new Error('Сетевая ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
-      } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
-      }
-    };
-
-    const fetchDeleteCategory = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.VUE_APP_BASE_URL}/admin/categories/${categoryId.value}`,
-          { method: 'DELETE' }
-        );
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
+        fetchData.value = [...categoriesList];
+        console.log(86, fetchData.value.length);
+        if (excludeIds.value.length > 0) {
+          fetchData.value = fetchData.value.filter(
+            (el) => !excludeIds.value.find((e) => e == el.id)
+          );
         }
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
-        throw error;
-      } finally {
-        fetchCategoriesData();
       }
     };
 
     const handleDelete = (item) => {
       isOpenDeleteCategory.value = true;
       categoryId.value = item.id;
+      excludeIds.value.push(item.id);
     };
 
     const closeModal = () => {
@@ -121,7 +107,7 @@ export default {
     };
 
     const confirmDeleteCategory = () => {
-      fetchDeleteCategory()
+      fetchCategoriesData()
         .then(() => {
           closeModal();
         })

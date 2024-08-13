@@ -77,6 +77,7 @@ import { ref, onMounted, watch, inject } from 'vue';
 import { formatTimestamp } from '../common/utils.js';
 import { RiPencilFill } from '@remixicon/vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
+import { usersList } from '../api/users/users';
 
 export default {
   name: 'UsersPage',
@@ -107,17 +108,17 @@ export default {
     };
 
     const fetchUsersData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/users`;
+      // let url = `${process.env.VUE_APP_BASE_URL}/admin/users`;
 
-      if (searchQuery.value !== '') {
-        url += `?${query.value.typeConnect}=${searchQuery.value}`;
-      }
+      // if (searchQuery.value !== '') {
+      //   url += `?${query.value.typeConnect}=${searchQuery.value}`;
+      // }
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        // const response = await fetch(url);
+        // if (!response.ok) {
+        //   throw new Error('Ошибка: ' + response.statusText);
+        // }
+        fetchData.value = usersList;
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         fetchData.value = [];

@@ -97,6 +97,7 @@ import TableForDataPage from '@/components/TableForDataPage.vue';
 import { formatTimestamp } from '../../common/utils.js';
 import { RiPencilFill, RiDeleteBinLine } from '@remixicon/vue';
 import ModalData from '../../components/ModalData.vue';
+import { subscriptionPlans } from '../../api/settings/subscriptionPlans/subscriptionPlans';
 
 export default {
   name: 'SubscriptionPlanPage',
@@ -155,14 +156,8 @@ export default {
         });
     };
     const fetchSubscriptionsData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/subscription-plans`;
-
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        fetchData.value = subscriptionPlans;
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         fetchData.value = [];

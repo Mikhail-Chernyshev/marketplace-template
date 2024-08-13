@@ -78,6 +78,7 @@
 <script>
 import { ref, onMounted, watch } from 'vue';
 import TableForDataPage from '@/components/TableForDataPage.vue';
+import {productsList} from '../api/products/products'
 
 export default {
   name: 'ProductsPage',
@@ -104,28 +105,28 @@ export default {
     };
 
     const fetchProductsData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/products`;
+      // let url = `${process.env.VUE_APP_BASE_URL}/admin/products`;
 
-      if (searchQuery.value !== '') {
-        url += `?q=${searchQuery.value}`;
-      }
-      const queryParams = [];
-      if (query.value.featured) {
-        queryParams.push(`featured=${query.value.featured}`);
-      }
-      if (query.value.discount) {
-        queryParams.push(`discount=${query.value.discount}`);
-      }
-      if (queryParams.length) {
-        url += `?${queryParams.join('&')}`;
-      }
+      // if (searchQuery.value !== '') {
+      //   url += `?q=${searchQuery.value}`;
+      // }
+      // const queryParams = [];
+      // if (query.value.featured) {
+      //   queryParams.push(`featured=${query.value.featured}`);
+      // }
+      // if (query.value.discount) {
+      //   queryParams.push(`discount=${query.value.discount}`);
+      // }
+      // if (queryParams.length) {
+      //   url += `?${queryParams.join('&')}`;
+      // }
 
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        // const response = await fetch(url);
+        // if (!response.ok) {
+        //   throw new Error('Ошибка: ' + response.statusText);
+        // }
+        fetchData.value = productsList
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         fetchData.value = [];

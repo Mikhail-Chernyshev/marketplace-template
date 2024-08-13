@@ -157,6 +157,7 @@ import { useRouter } from 'vue-router';
 import { RiRefreshLine } from '@remixicon/vue';
 import DatePickerInput from '../components/DatePickerInput.vue';
 import { formatDateFrom } from '../common/utils';
+import { promos } from '../api/settings/promos/promos';
 
 export default {
   name: 'subscriptionPlanItem',
@@ -177,14 +178,11 @@ export default {
       { text: '90 days', value: '90' },
     ];
 
-    const fetchsubscriptionPlanData = async () => {
-      let url = `${process.env.VUE_APP_BASE_URL}/admin/subscription-promos/${props?.id}`;
+    const fetchPromocodeData = async () => {
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Ошибка: ' + response.statusText);
-        }
-        fetchData.value = await response.json();
+        console.log(promos.contents.find((el) => el.id == idPlan.value));
+
+        fetchData.value = promos.contents.find((el) => el.id == idPlan.value);
         fetchData.value.expiredAt = formatDateFrom(fetchData.value.expiredAt);
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
@@ -232,7 +230,7 @@ export default {
 
     onMounted(() => {
       if (props.id) {
-        fetchsubscriptionPlanData();
+        fetchPromocodeData();
       }
     });
 
