@@ -96,6 +96,7 @@ export default {
     };
 
     const handleDelete = (item) => {
+      console.log('check');
       isOpenDeleteCategory.value = true;
       categoryId.value = item.id;
       excludeIds.value.push(item.id);
